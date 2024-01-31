@@ -42,4 +42,7 @@ export class Tweet extends BaseEntity {
 
   @OneToMany(() => TweetRetweet, (tweet_retweet) => tweet_retweet.tweet)
   tweet_retweets: TweetRetweet[];
+
+  @Column()
+  userId: number;
 }
