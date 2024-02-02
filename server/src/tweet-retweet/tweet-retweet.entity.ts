@@ -4,6 +4,7 @@ import {
   ManyToOne,
   PrimaryGeneratedColumn,
   CreateDateColumn,
+  Column,
 } from 'typeorm';
 import { Users } from 'src/auth/users.entity';
 import { Tweet } from 'src/tweet/tweet.entity';
@@ -21,4 +22,10 @@ export class TweetRetweet extends BaseEntity {
 
   @CreateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   createdAt: Date;
+
+  @Column()
+  userId: number;
+
+  @Column()
+  tweetId: number;
 }

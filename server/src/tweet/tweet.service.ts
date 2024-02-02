@@ -20,41 +20,15 @@ export class TweetService {
   ): Promise<Tweet> {
     const tweet = new Tweet();
     tweet.content = createTweetDto.content;
-    tweet.userId = user.id;
+    tweet.user = user;
 
     return await this.tweetRepository.save(tweet);
   }
 
-  // UPDATE TWEET
-  async updateTweet(
-    user: Users,
-    id: number,
-    updateTweetDto: UpdateTweetDto,
-  ): Promise<Tweet> {
-    const tweetToUpdate = await this.tweetRepository.findOne({
-      where: { id, userId: user.id },
-    });
-
-    if (!tweetToUpdate) {
-      throw new NotFoundException(
-        'You can not update this tweet, you did not create it',
-      );
-    }
-
-    tweetToUpdate.content = updateTweetDto.content;
-
-    return await this.tweetRepository.save(tweetToUpdate);
-  }
-
-  // GET ALL TWEETS
-  async getAllTweets(): Promise<Tweet[]> {
-    return await this.tweetRepository.find();
-  }
-
   // GET TWEET BY ID
-  async getTweetById(id: number): Promise<Tweet> {
+  async getTweetById(tweetId: number): Promise<Tweet> {
     const tweet = await this.tweetRepository.findOne({
-      where: { id },
+      where: { id: tweetId },
       relations: ['user', 'user.profile'],
     });
 
@@ -65,18 +39,40 @@ export class TweetService {
     return tweet;
   }
 
-  // DELETE TWEET BY ID
-  async deleteTweetById(user: Users, id: number): Promise<void> {
-    const tweetToBeDeleted = await this.tweetRepository.findOne({
-      where: { id, userId: user.id },
-    });
+  // UPDATE TWEET
+  async updateTweet(
+    user: Users,
+    tweetId: number,
+    updateTweetDto: UpdateTweetDto,
+  ): Promise<Tweet> {
+    const tweetToUpdate = await this.getTweetById(tweetId);
 
-    if (!tweetToBeDeleted) {
+    if (tweetToUpdate.userId !== user.id) {
+      throw new NotFoundException(
+        'You can not update this tweet, you did not create it',
+      );
+    }
+
+    tweetToUpdate.content = updateTweetDto.content;
+
+    return await this.tweetRepository.save(tweetToUpdate);
+  }
+
+  // DELETE TWEET BY ID
+  async deleteTweetById(user: Users, tweetId: number): Promise<void> {
+    const tweetToBeDeleted = await this.getTweetById(tweetId);
+
+    if (tweetToBeDeleted.userId !== user.id) {
       throw new NotFoundException(
         'You can not not delete tweet you did not create',
       );
     }
 
     await this.tweetRepository.remove(tweetToBeDeleted);
+  }
+
+  // GET ALL TWEETS
+  async getAllTweets(): Promise<Tweet[]> {
+    return await this.tweetRepository.find();
   }
 }

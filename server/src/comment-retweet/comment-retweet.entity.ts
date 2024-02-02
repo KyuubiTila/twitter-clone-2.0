@@ -6,6 +6,7 @@ import {
   ManyToOne,
   PrimaryGeneratedColumn,
   CreateDateColumn,
+  Column,
 } from 'typeorm';
 
 @Entity('CommentRetweet')
@@ -21,4 +22,10 @@ export class CommentRetweet extends BaseEntity {
 
   @CreateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   createdAt: Date;
+
+  @Column()
+  userId: number;
+
+  @Column()
+  commentId: number;
 }

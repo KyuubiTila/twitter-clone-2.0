@@ -21,6 +21,12 @@ export class Tweet extends BaseEntity {
   @Column()
   content: string;
 
+  // @Column()
+  // likesCount: number;
+
+  // @Column()
+  // retweetsCount: number;
+
   @CreateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   createdAt: Date;
 

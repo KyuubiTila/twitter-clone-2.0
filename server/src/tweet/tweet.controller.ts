@@ -30,30 +30,30 @@ export class TweetController {
     return this.tweetService.createTweet(user, createTweetDto);
   }
 
-  @Patch(':id')
+  @Get(':tweetId')
+  getTweetById(@Param('tweetId') tweetId: number) {
+    return this.tweetService.getTweetById(tweetId);
+  }
+
+  @Patch(':tweetId')
   async updateTweet(
     @GetAuthenticatedUser() user: Users,
-    @Param('id') id: number,
+    @Param('tweetId') tweetId: number,
     @Body() updateTweetDto: UpdateTweetDto,
   ): Promise<Tweet> {
-    return this.tweetService.updateTweet(user, id, updateTweetDto);
+    return this.tweetService.updateTweet(user, tweetId, updateTweetDto);
+  }
+
+  @Delete(':tweetId')
+  async deleteTweetById(
+    @GetAuthenticatedUser() user: Users,
+    @Param('tweetId') tweetId: number,
+  ) {
+    return this.tweetService.deleteTweetById(user, tweetId);
   }
 
   @Get()
   getAllTweets() {
     return this.tweetService.getAllTweets();
-  }
-
-  @Get(':id')
-  getTweetById(@Param('id') id: number) {
-    return this.tweetService.getTweetById(id);
-  }
-
-  @Delete(':id')
-  async deleteTweetById(
-    @GetAuthenticatedUser() user: Users,
-    @Param('id') id: number,
-  ) {
-    return this.tweetService.deleteTweetById(user, id);
   }
 }

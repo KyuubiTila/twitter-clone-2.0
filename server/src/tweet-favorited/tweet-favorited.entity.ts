@@ -34,4 +34,7 @@ export class TweetFavorited extends BaseEntity {
 
   @Column()
   userId: number;
+
+  @Column()
+  tweetId: number;
 }

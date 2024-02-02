@@ -19,27 +19,21 @@ import { ProfileService } from './profile.service';
 export class ProfileController {
   constructor(private readonly profileService: ProfileService) {}
 
-  @Get('/:id')
-  getProfileById(@Param('id') id: number) {
-    return this.profileService.getProfileById(id);
+  @Get('/:profileId')
+  getProfileById(@Param('profileId') profileId: number): Promise<Profile> {
+    return this.profileService.getProfileById(profileId);
   }
 
-  @Patch('/:id')
+  @Patch('/:profileId')
   async updateProfile(
     @GetAuthenticatedUser() user: Users,
-    @Param('id', ParseIntPipe) id: number,
+    @Param('profileId', ParseIntPipe) profileId: number,
     @Body() updateProfileDto: UpdateProfileDto,
   ): Promise<Profile> {
-    return await this.profileService.updateProfile(user, id, updateProfileDto);
+    return await this.profileService.updateProfile(
+      user,
+      profileId,
+      updateProfileDto,
+    );
   }
-
-  // @Get(':id/following-followers')
-  // async getFollowingAndFollowers(@Param('id') id: string) {
-  //   const { following, followers } =
-  //     await this.profileService.getFollowingAndFollowers(Number(id));
-  //   return {
-  //     following,
-  //     followers,
-  //   };
-  // }
 }
