@@ -22,11 +22,11 @@ export class Comment extends BaseEntity {
   @Column()
   content: string;
 
-  // @Column()
-  // likesCount: number;
+  @Column({ default: 0 })
+  likesCount: number;
 
-  // @Column()
-  // retweetsCount: number;
+  @Column({ default: 0 })
+  retweetsCount: number;
 
   @CreateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   createdAt: Date;

@@ -62,7 +62,13 @@ export class FollowService {
     });
 
     if (!userToBeUnfollowed || !authenticatedUserUnfollowing) {
-      throw new NotFoundException('User or unfollower not found');
+      throw new NotFoundException(
+        'User not found or unfollower not authenticated',
+      );
+    }
+
+    if (userToBeUnfollowed.id === authenticatedUserUnfollowing.id) {
+      throw new NotAcceptableException('You cannot unfollow yourself');
     }
 
     userToBeUnfollowed.followers = userToBeUnfollowed.followers.filter(

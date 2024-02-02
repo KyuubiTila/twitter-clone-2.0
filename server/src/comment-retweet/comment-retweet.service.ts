@@ -45,6 +45,7 @@ export class CommentRetweetService {
       await this.commentRetweetRepository.save(newCommentRetweet);
     }
 
+    await this.updateCommentRetweetCount(commentId);
     await commentToRetweet.reload();
   }
 
@@ -71,6 +72,25 @@ export class CommentRetweetService {
       await this.commentRetweetRepository.remove(retweet);
     }
 
+    await this.updateCommentRetweetCount(commentId);
     await commentToUndoRetweet.reload();
+  }
+
+  // UPDATE COMMENT RETWEET COUNT
+  async updateCommentRetweetCount(
+    commentId: number,
+  ): Promise<{ success: boolean; message: string }> {
+    const count = await this.commentRetweetRepository.count({
+      where: { commentId },
+    });
+    await this.commentRepository.update(
+      { id: commentId },
+      { retweetsCount: count },
+    );
+
+    return {
+      success: true,
+      message: 'Comment retweet count updated successfully',
+    };
   }
 }

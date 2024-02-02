@@ -45,6 +45,7 @@ export class TweetFavoritedService {
       await this.tweetFavoritedRepository.save(newTweetLike);
     }
 
+    await this.updateTweetFavoritedCount(tweetId);
     await tweetToLike.reload();
   }
 
@@ -71,6 +72,22 @@ export class TweetFavoritedService {
       await this.tweetFavoritedRepository.remove(isLiked);
     }
 
+    await this.updateTweetFavoritedCount(tweetId);
     await tweetToUnlike.reload();
+  }
+
+  // UPDATE TWEET FAVORITED COUNT
+  async updateTweetFavoritedCount(
+    tweetId: number,
+  ): Promise<{ success: boolean; message: string }> {
+    const count = await this.tweetFavoritedRepository.count({
+      where: { tweetId },
+    });
+    await this.tweetRepository.update({ id: tweetId }, { likesCount: count });
+
+    return {
+      success: true,
+      message: 'Tweet likes count updated successfully',
+    };
   }
 }

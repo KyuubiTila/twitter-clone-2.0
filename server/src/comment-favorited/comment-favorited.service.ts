@@ -45,6 +45,7 @@ export class CommentFavoritedService {
       await this.commentFavoritedRepository.save(newCommentFavorite);
     }
 
+    await this.updateCommentFavoritesCount(commentId);
     await commentToLike.reload();
   }
 
@@ -71,6 +72,25 @@ export class CommentFavoritedService {
       await this.commentFavoritedRepository.remove(commentFavorite);
     }
 
+    await this.updateCommentFavoritesCount(commentId);
     await commentToUnlike.reload();
+  }
+
+  // UPDATE COMMENT FAVORITE COUNT
+  async updateCommentFavoritesCount(
+    commentId: number,
+  ): Promise<{ success: boolean; message: string }> {
+    const count = await this.commentFavoritedRepository.count({
+      where: { commentId },
+    });
+    await this.commentRepository.update(
+      { id: commentId },
+      { likesCount: count },
+    );
+
+    return {
+      success: true,
+      message: 'Comment likes count updated successfully',
+    };
   }
 }
