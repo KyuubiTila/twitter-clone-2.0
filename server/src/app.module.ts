@@ -10,6 +10,8 @@ import { TweetRetweetModule } from './tweet-retweet/tweet-retweet.module';
 import { CommentRetweetModule } from './comment-retweet/comment-retweet.module';
 import { ProfileModule } from './profile/profile.module';
 import { FollowModule } from './follow/follow.module';
+import { CommentBookmarkModule } from './comment-bookmark/comment-bookmark.module';
+import { TweetBookmarkModule } from './tweet-bookmark/tweet-bookmark.module';
 
 @Module({
   imports: [
@@ -23,6 +25,8 @@ import { FollowModule } from './follow/follow.module';
     CommentRetweetModule,
     ProfileModule,
     FollowModule,
+    CommentBookmarkModule,
+    TweetBookmarkModule,
   ],
 })
 export class AppModule {}

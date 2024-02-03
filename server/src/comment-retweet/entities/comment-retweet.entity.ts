@@ -1,5 +1,5 @@
-import { Users } from 'src/auth/users.entity';
-import { Comment } from 'src/comment/comment.entity';
+import { Users } from 'src/auth/entities/users.entity';
+import { Comment } from 'src/comment/entities/comment.entity';
 import {
   BaseEntity,
   Entity,
@@ -14,10 +14,10 @@ export class CommentRetweet extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @ManyToOne(() => Users, (user) => user.comment_retweets)
+  @ManyToOne(() => Users, (user) => user.comment_retweetedBy)
   user: Users;
 
-  @ManyToOne(() => Comment, (comment) => comment.comment_retweets)
+  @ManyToOne(() => Comment, (comment) => comment.comment_retweeted)
   comment: Comment;
 
   @CreateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })

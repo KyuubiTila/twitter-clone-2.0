@@ -2,8 +2,8 @@ import { CreateTweetDto } from './dto/create-tweet.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { Repository } from 'typeorm';
-import { Tweet } from './tweet.entity';
-import { Users } from 'src/auth/users.entity';
+import { Tweet } from './entities/tweet.entity';
+import { Users } from 'src/auth/entities/users.entity';
 import { UpdateTweetDto } from './dto/update-tweet.dto';
 
 @Injectable()

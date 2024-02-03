@@ -11,7 +11,7 @@ import {
   JoinColumn,
   Unique,
 } from 'typeorm';
-import { Users } from 'src/auth/users.entity';
+import { Users } from 'src/auth/entities/users.entity';
 
 @Entity('Profile')
 @Unique(['user'])

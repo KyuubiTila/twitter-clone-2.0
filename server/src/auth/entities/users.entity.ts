@@ -11,13 +11,15 @@ import {
   JoinTable,
   Column,
 } from 'typeorm';
-import { Tweet } from 'src/tweet/tweet.entity';
-import { Comment } from 'src/comment/comment.entity';
-import { CommentFavorited } from 'src/comment-favorited/comment-favorited.entity';
-import { TweetFavorited } from 'src/tweet-favorited/tweet-favorited.entity';
-import { TweetRetweet } from 'src/tweet-retweet/tweet-retweet.entity';
-import { CommentRetweet } from 'src/comment-retweet/comment-retweet.entity';
-import { Profile } from './../profile/profile.entity';
+import { Tweet } from 'src/tweet/entities/tweet.entity';
+import { Comment } from 'src/comment/entities/comment.entity';
+import { CommentFavorited } from 'src/comment-favorited/entities/comment-favorited.entity';
+import { TweetFavorited } from 'src/tweet-favorited/entities/tweet-favorited.entity';
+import { TweetRetweet } from 'src/tweet-retweet/entities/tweet-retweet.entity';
+import { CommentRetweet } from 'src/comment-retweet/entities/comment-retweet.entity';
+import { Profile } from '../../profile/entities/profile.entity';
+import { TweetBookmark } from 'src/tweet-bookmark/entities/tweet-bookmark.entity';
+import { CommentBookmark } from 'src/comment-bookmark/entities/comment-bookmark.entity';
 
 @Entity('Users')
 @Unique(['username', 'email'])
@@ -73,11 +75,26 @@ export class Users extends BaseEntity {
   @ManyToMany(() => Users, (user) => user.followers)
   following: Users[];
 
-  @OneToMany(() => TweetRetweet, (tweet_retweet) => tweet_retweet.user)
-  tweet_retweets: TweetRetweet[];
+  @OneToMany(() => TweetRetweet, (tweet_retweetedBy) => tweet_retweetedBy.user)
+  tweet_retweetedBy: TweetRetweet[];
 
-  @OneToMany(() => CommentRetweet, (comment_retweet) => comment_retweet.user)
-  comment_retweets: CommentRetweet[];
+  @OneToMany(
+    () => CommentRetweet,
+    (comment_retweetedBy) => comment_retweetedBy.user,
+  )
+  comment_retweetedBy: CommentRetweet[];
+
+  @OneToMany(
+    () => TweetBookmark,
+    (tweet_bookmarkedBy) => tweet_bookmarkedBy.user,
+  )
+  tweet_bookmarkedBy: TweetBookmark[];
+
+  @OneToMany(
+    () => CommentBookmark,
+    (comment_bookmarkedBy) => comment_bookmarkedBy.user,
+  )
+  comment_bookmarkedBy: CommentBookmark[];
 
   @OneToOne(() => Profile, (profile) => profile.user, {
     cascade: true,

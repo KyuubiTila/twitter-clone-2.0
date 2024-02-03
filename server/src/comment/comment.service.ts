@@ -7,9 +7,9 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Users } from 'src/auth/users.entity';
-import { Tweet } from 'src/tweet/tweet.entity';
-import { Comment } from './comment.entity';
+import { Users } from 'src/auth/entities/users.entity';
+import { Tweet } from 'src/tweet/entities/tweet.entity';
+import { Comment } from './entities/comment.entity';
 
 @Injectable()
 export class CommentService {

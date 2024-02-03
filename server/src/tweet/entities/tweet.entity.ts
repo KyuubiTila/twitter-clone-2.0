@@ -1,7 +1,8 @@
-import { Users } from 'src/auth/users.entity';
-import { Comment } from 'src/comment/comment.entity';
-import { TweetFavorited } from 'src/tweet-favorited/tweet-favorited.entity';
-import { TweetRetweet } from 'src/tweet-retweet/tweet-retweet.entity';
+import { Users } from 'src/auth/entities/users.entity';
+import { Comment } from 'src/comment/entities/comment.entity';
+import { TweetBookmark } from 'src/tweet-bookmark/entities/tweet-bookmark.entity';
+import { TweetFavorited } from 'src/tweet-favorited/entities/tweet-favorited.entity';
+import { TweetRetweet } from 'src/tweet-retweet/entities/tweet-retweet.entity';
 import {
   BaseEntity,
   Entity,
@@ -27,6 +28,9 @@ export class Tweet extends BaseEntity {
   @Column({ default: 0 })
   retweetsCount: number;
 
+  @Column({ default: 0 })
+  bookmarksCount: number;
+
   @CreateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   createdAt: Date;
 
@@ -46,8 +50,11 @@ export class Tweet extends BaseEntity {
   @OneToMany(() => TweetFavorited, (tweet_favorited) => tweet_favorited.tweet)
   tweet_favorited: TweetFavorited[];
 
-  @OneToMany(() => TweetRetweet, (tweet_retweet) => tweet_retweet.tweet)
-  tweet_retweets: TweetRetweet[];
+  @OneToMany(() => TweetRetweet, (tweet_retweeted) => tweet_retweeted.tweet)
+  tweet_retweeted: TweetRetweet[];
+
+  @OneToMany(() => TweetBookmark, (tweet_bookmarked) => tweet_bookmarked.tweet)
+  tweet_bookmarked: TweetBookmark[];
 
   @Column()
   userId: number;

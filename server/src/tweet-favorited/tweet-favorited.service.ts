@@ -5,9 +5,9 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Users } from 'src/auth/users.entity';
-import { Tweet } from 'src/tweet/tweet.entity';
-import { TweetFavorited } from './tweet-favorited.entity';
+import { Users } from 'src/auth/entities/users.entity';
+import { Tweet } from 'src/tweet/entities/tweet.entity';
+import { TweetFavorited } from './entities/tweet-favorited.entity';
 
 @Injectable()
 export class TweetFavoritedService {
@@ -77,17 +77,10 @@ export class TweetFavoritedService {
   }
 
   // UPDATE TWEET FAVORITED COUNT
-  async updateTweetFavoritedCount(
-    tweetId: number,
-  ): Promise<{ success: boolean; message: string }> {
+  async updateTweetFavoritedCount(tweetId: number): Promise<void> {
     const count = await this.tweetFavoritedRepository.count({
       where: { tweetId },
     });
     await this.tweetRepository.update({ id: tweetId }, { likesCount: count });
-
-    return {
-      success: true,
-      message: 'Tweet likes count updated successfully',
-    };
   }
 }

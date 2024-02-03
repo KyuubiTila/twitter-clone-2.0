@@ -6,18 +6,18 @@ import {
   CreateDateColumn,
   Column,
 } from 'typeorm';
-import { Users } from 'src/auth/users.entity';
-import { Tweet } from 'src/tweet/tweet.entity';
+import { Users } from 'src/auth/entities/users.entity';
+import { Tweet } from 'src/tweet/entities/tweet.entity';
 
 @Entity('TweetRetweet')
 export class TweetRetweet extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @ManyToOne(() => Users, (user) => user.tweet_retweets)
+  @ManyToOne(() => Users, (user) => user.tweet_retweetedBy)
   user: Users;
 
-  @ManyToOne(() => Tweet, (tweet) => tweet.tweet_retweets)
+  @ManyToOne(() => Tweet, (tweet) => tweet.tweet_retweeted)
   tweet: Tweet;
 
   @CreateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })

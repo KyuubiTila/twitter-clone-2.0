@@ -7,11 +7,11 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { RegisterCredentialDto } from './dto/register-credential.dto';
-import { Users } from './users.entity';
+import { Users } from './entities/users.entity';
 import { LoginCredentialDto } from './dto/login-credential.dto';
 import { JwtPayload } from './jwt-payload.interface';
 import { JwtService } from '@nestjs/jwt';
-import { Profile } from 'src/profile/profile.entity';
+import { Profile } from 'src/profile/entities/profile.entity';
 
 @Injectable()
 export class AuthService {

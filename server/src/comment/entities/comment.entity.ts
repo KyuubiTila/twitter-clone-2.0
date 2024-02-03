@@ -9,10 +9,11 @@ import {
   OneToMany,
 } from 'typeorm';
 
-import { Users } from 'src/auth/users.entity';
-import { Tweet } from 'src/tweet/tweet.entity';
-import { CommentFavorited } from 'src/comment-favorited/comment-favorited.entity';
-import { CommentRetweet } from 'src/comment-retweet/comment-retweet.entity';
+import { Users } from 'src/auth/entities/users.entity';
+import { Tweet } from 'src/tweet/entities/tweet.entity';
+import { CommentFavorited } from 'src/comment-favorited/entities/comment-favorited.entity';
+import { CommentRetweet } from 'src/comment-retweet/entities/comment-retweet.entity';
+import { CommentBookmark } from 'src/comment-bookmark/entities/comment-bookmark.entity';
 
 @Entity('Comment')
 export class Comment extends BaseEntity {
@@ -27,6 +28,9 @@ export class Comment extends BaseEntity {
 
   @Column({ default: 0 })
   retweetsCount: number;
+
+  @Column({ default: 0 })
+  bookmarksCount: number;
 
   @CreateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   createdAt: Date;
@@ -50,8 +54,17 @@ export class Comment extends BaseEntity {
   )
   comment_favorited: CommentFavorited[];
 
-  @OneToMany(() => CommentRetweet, (comment_retweet) => comment_retweet.comment)
-  comment_retweets: CommentRetweet[];
+  @OneToMany(
+    () => CommentRetweet,
+    (comment_retweeted) => comment_retweeted.comment,
+  )
+  comment_retweeted: CommentRetweet[];
+
+  @OneToMany(
+    () => CommentBookmark,
+    (comment_bookmarked) => comment_bookmarked.comment,
+  )
+  comment_bookmarked: CommentBookmark[];
 
   @Column()
   userId: number;

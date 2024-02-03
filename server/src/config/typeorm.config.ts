@@ -12,7 +12,7 @@ export const typeOrmConfig: DataSourceOptions = {
   username: process.env.RDS_USERNAME || dbConfig.username,
   password: process.env.RDS_PASSWORD || dbConfig.password,
   database: process.env.RDS_DB_NAME || dbConfig.database,
-  entities: [__dirname + '/../**/*.entity{.ts,.js}'],
+  entities: [__dirname + '/../**/entities/*.entity{.ts,.js}'],
   synchronize: process.env.TYPEORM_SYNC || dbConfig.synchronize,
   migrations: [__dirname + '/../../migrations/*{.ts,.js}'],
   migrationsRun: true,

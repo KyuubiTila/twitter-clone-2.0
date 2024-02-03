@@ -12,8 +12,8 @@ import {
 import { TweetService } from './tweet.service';
 import { CreateTweetDto } from './dto/create-tweet.dto';
 import { UpdateTweetDto } from './dto/update-tweet.dto';
-import { Users } from 'src/auth/users.entity';
-import { Tweet } from './tweet.entity';
+import { Users } from 'src/auth/entities/users.entity';
+import { Tweet } from './entities/tweet.entity';
 import { AuthGuard } from '@nestjs/passport';
 import { GetAuthenticatedUser } from 'src/auth/get-authenticated-user.decorator';
 

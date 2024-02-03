@@ -1,7 +1,7 @@
 import { Controller, Post, Delete, Param, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { GetAuthenticatedUser } from 'src/auth/get-authenticated-user.decorator';
-import { Users } from 'src/auth/users.entity';
+import { Users } from 'src/auth/entities/users.entity';
 import { TweetRetweetService } from './tweet-retweet.service';
 
 @Controller('tweets-retweets')

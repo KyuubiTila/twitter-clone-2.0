@@ -8,8 +8,8 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 
-import { Users } from 'src/auth/users.entity';
-import { Comment } from 'src/comment/comment.entity';
+import { Users } from 'src/auth/entities/users.entity';
+import { Comment } from 'src/comment/entities/comment.entity';
 
 @Entity('CommentFavorited')
 export class CommentFavorited extends BaseEntity {

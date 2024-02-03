@@ -9,9 +9,9 @@ import {
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { GetAuthenticatedUser } from 'src/auth/get-authenticated-user.decorator';
-import { Users } from 'src/auth/users.entity';
+import { Users } from 'src/auth/entities/users.entity';
 import { UpdateProfileDto } from './dto/update-profile.dto';
-import { Profile } from './profile.entity';
+import { Profile } from './entities/profile.entity';
 import { ProfileService } from './profile.service';
 
 @Controller('profile')

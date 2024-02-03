@@ -5,9 +5,9 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Users } from 'src/auth/users.entity';
-import { CommentRetweet } from './comment-retweet.entity';
-import { Comment } from 'src/comment/comment.entity';
+import { Users } from 'src/auth/entities/users.entity';
+import { CommentRetweet } from './entities/comment-retweet.entity';
+import { Comment } from 'src/comment/entities/comment.entity';
 
 @Injectable()
 export class CommentRetweetService {
@@ -77,9 +77,7 @@ export class CommentRetweetService {
   }
 
   // UPDATE COMMENT RETWEET COUNT
-  async updateCommentRetweetCount(
-    commentId: number,
-  ): Promise<{ success: boolean; message: string }> {
+  async updateCommentRetweetCount(commentId: number): Promise<void> {
     const count = await this.commentRetweetRepository.count({
       where: { commentId },
     });
@@ -87,10 +85,5 @@ export class CommentRetweetService {
       { id: commentId },
       { retweetsCount: count },
     );
-
-    return {
-      success: true,
-      message: 'Comment retweet count updated successfully',
-    };
   }
 }

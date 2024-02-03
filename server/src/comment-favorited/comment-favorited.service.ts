@@ -5,9 +5,9 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Users } from 'src/auth/users.entity';
-import { CommentFavorited } from './comment-favorited.entity';
-import { Comment } from 'src/comment/comment.entity';
+import { Users } from 'src/auth/entities/users.entity';
+import { CommentFavorited } from './entities/comment-favorited.entity';
+import { Comment } from 'src/comment/entities/comment.entity';
 
 @Injectable()
 export class CommentFavoritedService {
@@ -77,9 +77,7 @@ export class CommentFavoritedService {
   }
 
   // UPDATE COMMENT FAVORITE COUNT
-  async updateCommentFavoritesCount(
-    commentId: number,
-  ): Promise<{ success: boolean; message: string }> {
+  async updateCommentFavoritesCount(commentId: number): Promise<void> {
     const count = await this.commentFavoritedRepository.count({
       where: { commentId },
     });
@@ -87,10 +85,5 @@ export class CommentFavoritedService {
       { id: commentId },
       { likesCount: count },
     );
-
-    return {
-      success: true,
-      message: 'Comment likes count updated successfully',
-    };
   }
 }
