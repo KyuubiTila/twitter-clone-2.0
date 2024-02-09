@@ -12,8 +12,7 @@ import {
 import { TweetService } from './tweet.service';
 import { CreateTweetDto } from './dto/create-tweet.dto';
 import { UpdateTweetDto } from './dto/update-tweet.dto';
-import { Users } from 'src/auth/entities/users.entity';
-import { Tweet } from './entities/tweet.entity';
+import { User } from 'src/auth/user.entity';
 import { AuthGuard } from '@nestjs/passport';
 import { GetAuthenticatedUser } from 'src/auth/get-authenticated-user.decorator';
 
@@ -24,9 +23,9 @@ export class TweetController {
 
   @Post()
   async createTweet(
-    @GetAuthenticatedUser() user: Users,
+    @GetAuthenticatedUser() user: User,
     @Body() createTweetDto: CreateTweetDto,
-  ): Promise<Tweet> {
+  ): Promise<boolean> {
     return this.tweetService.createTweet(user, createTweetDto);
   }
 
@@ -37,18 +36,18 @@ export class TweetController {
 
   @Patch(':tweetId')
   async updateTweet(
-    @GetAuthenticatedUser() user: Users,
+    @GetAuthenticatedUser() user: User,
     @Param('tweetId') tweetId: number,
     @Body() updateTweetDto: UpdateTweetDto,
-  ): Promise<Tweet> {
+  ): Promise<boolean> {
     return this.tweetService.updateTweet(user, tweetId, updateTweetDto);
   }
 
   @Delete(':tweetId')
   async deleteTweetById(
-    @GetAuthenticatedUser() user: Users,
+    @GetAuthenticatedUser() user: User,
     @Param('tweetId') tweetId: number,
-  ) {
+  ): Promise<boolean> {
     return this.tweetService.deleteTweetById(user, tweetId);
   }
 

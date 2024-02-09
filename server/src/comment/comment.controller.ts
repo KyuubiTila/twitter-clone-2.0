@@ -9,24 +9,24 @@ import {
   Patch,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { Users } from 'src/auth/entities/users.entity';
+import { User } from 'src/auth/user.entity';
 import { CommentService } from './comment.service';
-import { Comment } from './entities/comment.entity';
+import { Comment } from './comment.entity';
 import { CreateCommentDto } from './dto/create-comment.dto';
 import { UpdateCommentDto } from './dto/update-comment.dto';
 import { GetAuthenticatedUser } from 'src/auth/get-authenticated-user.decorator';
 
 @Controller('comments')
-@UseGuards(AuthGuard('jwt'))
+@UseGuards(AuthGuard())
 export class CommentController {
   constructor(private readonly commentService: CommentService) {}
 
   @Post(':tweetId')
   async createComment(
-    @GetAuthenticatedUser() user: Users,
+    @GetAuthenticatedUser() user: User,
     @Param('tweetId') tweetId: number,
     @Body() createCommentDto: CreateCommentDto,
-  ): Promise<Comment> {
+  ): Promise<boolean> {
     return await this.commentService.createComment(
       user,
       tweetId,
@@ -43,10 +43,10 @@ export class CommentController {
 
   @Patch(':commentId')
   async updateComment(
-    @GetAuthenticatedUser() user: Users,
+    @GetAuthenticatedUser() user: User,
     @Param('commentId') commentId: number,
     @Body() updateCommentDto: UpdateCommentDto,
-  ): Promise<Comment> {
+  ): Promise<boolean> {
     return await this.commentService.updateComment(
       user,
       commentId,
@@ -56,9 +56,9 @@ export class CommentController {
 
   @Delete(':commentId')
   async deleteComment(
-    @GetAuthenticatedUser() user: Users,
+    @GetAuthenticatedUser() user: User,
     @Param('commentId') commentId: number,
-  ): Promise<void> {
+  ): Promise<boolean> {
     return await this.commentService.deleteComment(user, commentId);
   }
 
@@ -66,6 +66,6 @@ export class CommentController {
   async getCommentsForTweet(
     @Param('tweetId') tweetId: number,
   ): Promise<Comment[]> {
-    return await this.commentService.getCommentsForTweet(tweetId);
+    return await this.commentService.getAllCommentsForTweet(tweetId);
   }
 }

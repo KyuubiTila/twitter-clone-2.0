@@ -7,8 +7,10 @@ import {
   Param,
   Post,
   UnauthorizedException,
+  UseGuards,
 } from '@nestjs/common';
 import { RegisterCredentialDto } from './dto/register-credential.dto';
+import { AuthGuard } from '@nestjs/passport';
 
 @Controller('auth')
 export class AuthController {
@@ -38,6 +40,7 @@ export class AuthController {
     return result;
   }
 
+  @UseGuards(AuthGuard())
   @Get('/:id')
   getUserById(@Param('id') id: number) {
     return this.authService.getUserByIdService(id);

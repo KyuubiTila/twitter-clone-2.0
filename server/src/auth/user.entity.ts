@@ -4,26 +4,27 @@ import {
   Entity,
   PrimaryGeneratedColumn,
   OneToMany,
-  ManyToMany,
   OneToOne,
   CreateDateColumn,
   UpdateDateColumn,
-  JoinTable,
   Column,
+  JoinColumn,
+  JoinTable,
 } from 'typeorm';
-import { Tweet } from 'src/tweet/entities/tweet.entity';
-import { Comment } from 'src/comment/entities/comment.entity';
-import { CommentFavorited } from 'src/comment-favorited/entities/comment-favorited.entity';
-import { TweetFavorited } from 'src/tweet-favorited/entities/tweet-favorited.entity';
-import { TweetRetweet } from 'src/tweet-retweet/entities/tweet-retweet.entity';
-import { CommentRetweet } from 'src/comment-retweet/entities/comment-retweet.entity';
-import { Profile } from '../../profile/entities/profile.entity';
-import { TweetBookmark } from 'src/tweet-bookmark/entities/tweet-bookmark.entity';
-import { CommentBookmark } from 'src/comment-bookmark/entities/comment-bookmark.entity';
+import { Tweet } from 'src/tweet/tweet.entity';
+import { Comment } from 'src/comment/comment.entity';
+import { CommentFavorited } from 'src/comment-favorited/comment-favorited.entity';
+import { TweetFavorited } from 'src/tweet-favorited/tweet-favorited.entity';
+import { TweetRetweet } from 'src/tweet-retweet/tweet-retweet.entity';
+import { CommentRetweet } from 'src/comment-retweet/comment-retweet.entity';
+import { Profile } from '../profile/profile.entity';
+import { TweetBookmark } from 'src/tweet-bookmark/tweet-bookmark.entity';
+import { CommentBookmark } from 'src/comment-bookmark/comment-bookmark.entity';
+import { Follow } from 'src/follow/follow.entity';
 
-@Entity('Users')
+@Entity('User')
 @Unique(['username', 'email'])
-export class Users extends BaseEntity {
+export class User extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -64,16 +65,11 @@ export class Users extends BaseEntity {
   )
   tweet_favoritedBy: TweetFavorited[];
 
-  @ManyToMany(() => Users, (user) => user.following)
-  @JoinTable({
-    name: 'user_following',
-    joinColumn: { name: 'followedUserId' },
-    inverseJoinColumn: { name: 'followerUserId' },
-  })
-  followers: Users[];
+  @OneToMany(() => Follow, (follow) => follow.follower)
+  following: Follow[];
 
-  @ManyToMany(() => Users, (user) => user.followers)
-  following: Users[];
+  @OneToMany(() => Follow, (follow) => follow.following)
+  follower: Follow[];
 
   @OneToMany(() => TweetRetweet, (tweet_retweetedBy) => tweet_retweetedBy.user)
   tweet_retweetedBy: TweetRetweet[];
@@ -97,7 +93,6 @@ export class Users extends BaseEntity {
   comment_bookmarkedBy: CommentBookmark[];
 
   @OneToOne(() => Profile, (profile) => profile.user, {
-    cascade: true,
     nullable: true,
   })
   profile: Profile;

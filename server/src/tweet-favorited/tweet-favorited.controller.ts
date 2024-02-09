@@ -1,26 +1,26 @@
 import { Controller, Post, Delete, Param, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { GetAuthenticatedUser } from 'src/auth/get-authenticated-user.decorator';
-import { Users } from 'src/auth/entities/users.entity';
+import { User } from 'src/auth/user.entity';
 import { TweetFavoritedService } from './tweet-favorited.service';
 
 @Controller('tweet-favoriting')
 export class TweetFavoritedController {
   constructor(private readonly tweetFavoritedService: TweetFavoritedService) {}
 
-  @Post(':tweetId/like')
+  @Post(':tweetId')
   @UseGuards(AuthGuard())
   async likeTweet(
-    @GetAuthenticatedUser() user: Users,
+    @GetAuthenticatedUser() user: User,
     @Param('tweetId') tweetId: number,
   ): Promise<void> {
     await this.tweetFavoritedService.likeTweet(user, tweetId);
   }
 
-  @Delete(':tweetId/undo-like')
+  @Delete(':tweetId')
   @UseGuards(AuthGuard())
   async unlikeTweet(
-    @GetAuthenticatedUser() user: Users,
+    @GetAuthenticatedUser() user: User,
     @Param('tweetId') tweetId: number,
   ): Promise<void> {
     await this.tweetFavoritedService.unlikeTweet(user, tweetId);

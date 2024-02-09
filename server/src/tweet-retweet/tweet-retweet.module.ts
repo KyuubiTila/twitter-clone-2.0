@@ -1,13 +1,13 @@
 import { AuthModule } from 'src/auth/auth.module';
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { Tweet } from 'src/tweet/entities/tweet.entity';
 import { TweetRetweetController } from './tweet-retweet.controller';
-import { TweetRetweet } from './entities/tweet-retweet.entity';
+import { TweetRetweet } from './tweet-retweet.entity';
 import { TweetRetweetService } from './tweet-retweet.service';
+import { TweetModule } from 'src/tweet/tweet.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([TweetRetweet, Tweet]), AuthModule],
+  imports: [TypeOrmModule.forFeature([TweetRetweet]), AuthModule, TweetModule],
   controllers: [TweetRetweetController],
   providers: [TweetRetweetService],
 })

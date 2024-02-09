@@ -1,3 +1,4 @@
+import { User } from 'src/auth/user.entity';
 import {
   BaseEntity,
   Entity,
@@ -10,8 +11,9 @@ import {
   JoinTable,
   JoinColumn,
   Unique,
+  ManyToOne,
+  OneToMany,
 } from 'typeorm';
-import { Users } from 'src/auth/entities/users.entity';
 
 @Entity('Profile')
 @Unique(['user'])
@@ -25,6 +27,12 @@ export class Profile extends BaseEntity {
   @Column({ nullable: true })
   image: string;
 
+  @Column({ default: 0 })
+  followersCount: number;
+
+  @Column({ default: 0 })
+  followingCount: number;
+
   @CreateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   createdAt: Date;
 
@@ -35,9 +43,11 @@ export class Profile extends BaseEntity {
   })
   updatedAt: Date;
 
-  @OneToOne(() => Users, (user) => user.profile)
+  @OneToOne(() => User, (user) => user.profile, {
+    cascade: true,
+  })
   @JoinColumn()
-  user: Users;
+  user: User;
 
   @Column()
   userId: number;

@@ -9,11 +9,11 @@ import {
   OneToMany,
 } from 'typeorm';
 
-import { Users } from 'src/auth/entities/users.entity';
-import { Tweet } from 'src/tweet/entities/tweet.entity';
-import { CommentFavorited } from 'src/comment-favorited/entities/comment-favorited.entity';
-import { CommentRetweet } from 'src/comment-retweet/entities/comment-retweet.entity';
-import { CommentBookmark } from 'src/comment-bookmark/entities/comment-bookmark.entity';
+import { User } from 'src/auth/user.entity';
+import { Tweet } from 'src/tweet/tweet.entity';
+import { CommentRetweet } from 'src/comment-retweet/comment-retweet.entity';
+import { CommentBookmark } from 'src/comment-bookmark/comment-bookmark.entity';
+import { CommentFavorited } from 'src/comment-favorited/comment-favorited.entity';
 
 @Entity('Comment')
 export class Comment extends BaseEntity {
@@ -42,8 +42,8 @@ export class Comment extends BaseEntity {
   })
   updatedAt: Date;
 
-  @ManyToOne(() => Users, (user) => user.comment)
-  user: Users;
+  @ManyToOne(() => User, (user) => user.comment)
+  user: User;
 
   @ManyToOne(() => Tweet, (tweet) => tweet.comment)
   tweet: Tweet;

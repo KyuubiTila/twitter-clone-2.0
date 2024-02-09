@@ -2,88 +2,91 @@ import {
   Injectable,
   NotFoundException,
   ConflictException,
+  InternalServerErrorException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Users } from 'src/auth/entities/users.entity';
-import { CommentRetweet } from './entities/comment-retweet.entity';
-import { Comment } from 'src/comment/entities/comment.entity';
+import { User } from 'src/auth/user.entity';
+import { CommentRetweet } from './comment-retweet.entity';
+import { CommentService } from 'src/comment/comment.service';
 
 @Injectable()
 export class CommentRetweetService {
   constructor(
     @InjectRepository(CommentRetweet)
     private commentRetweetRepository: Repository<CommentRetweet>,
-    @InjectRepository(Comment)
-    private commentRepository: Repository<Comment>,
+    private commentService: CommentService,
   ) {}
 
   // RETWEET COMMENT
-  async retweetComment(user: Users, commentId: number): Promise<void> {
-    const commentToRetweet = await this.commentRepository.findOne({
-      where: { id: commentId },
-    });
+  async retweetComment(user: User, commentId: number): Promise<void> {
+    try {
+      const commentToRetweet =
+        await this.commentService.commentExists(commentId);
 
-    if (!commentToRetweet) {
-      throw new NotFoundException('Comment not found');
-    }
+      if (!commentToRetweet) {
+        throw new NotFoundException('Comment not found');
+      }
 
-    const hasRetweeted = await this.commentRetweetRepository.findOne({
-      where: {
-        userId: user.id,
-        commentId: commentId,
-      },
-    });
-
-    if (hasRetweeted) {
-      throw new ConflictException('Comment has already been retweeted by you');
-    } else {
-      const newCommentRetweet = this.commentRetweetRepository.create({
-        user,
-        commentId,
+      const hasRetweeted = await this.commentRetweetRepository.findOne({
+        where: {
+          userId: user.id,
+          commentId: commentId,
+        },
+        select: ['id'],
       });
-      await this.commentRetweetRepository.save(newCommentRetweet);
-    }
 
-    await this.updateCommentRetweetCount(commentId);
-    await commentToRetweet.reload();
+      if (hasRetweeted) {
+        throw new ConflictException(
+          'Comment has already been retweeted by you',
+        );
+      } else {
+        const newCommentRetweet = this.commentRetweetRepository.create({
+          user,
+          commentId,
+        });
+        await this.commentRetweetRepository.insert(newCommentRetweet);
+      }
+
+      await this.commentService.updateCommentRetweetCount(commentId);
+    } catch (error) {
+      throw new InternalServerErrorException(
+        'Failed to retweet comment',
+        error.message,
+      );
+    }
   }
 
   // UNDO RETWEET COMMENT
-  async undoRetweetComment(user: Users, commentId: number): Promise<void> {
-    const commentToUndoRetweet = await this.commentRepository.findOne({
-      where: { id: commentId },
-    });
+  async undoRetweetComment(user: User, commentId: number): Promise<void> {
+    try {
+      const commentToUndoRetweet =
+        await this.commentService.commentExists(commentId);
 
-    if (!commentToUndoRetweet) {
-      throw new NotFoundException('Comment not found');
+      if (!commentToUndoRetweet) {
+        throw new NotFoundException('Comment not found');
+      }
+
+      const retweet = await this.commentRetweetRepository.findOne({
+        where: {
+          userId: user.id,
+          commentId,
+        },
+        select: ['id'],
+      });
+
+      if (!retweet) {
+        throw new NotFoundException('Comment has not been retweeted by you');
+      } else {
+        await this.commentRetweetRepository.remove(retweet);
+      }
+
+      await this.commentService.updateCommentRetweetCount(commentId);
+    } catch (error) {
+      throw new InternalServerErrorException(
+        'Failed to undo retweet comment',
+        error.message,
+      );
     }
-
-    const retweet = await this.commentRetweetRepository.findOne({
-      where: {
-        userId: user.id,
-        commentId,
-      },
-    });
-
-    if (!retweet) {
-      throw new NotFoundException('Comment has not been retweeted by you');
-    } else {
-      await this.commentRetweetRepository.remove(retweet);
-    }
-
-    await this.updateCommentRetweetCount(commentId);
-    await commentToUndoRetweet.reload();
-  }
-
-  // UPDATE COMMENT RETWEET COUNT
-  async updateCommentRetweetCount(commentId: number): Promise<void> {
-    const count = await this.commentRetweetRepository.count({
-      where: { commentId },
-    });
-    await this.commentRepository.update(
-      { id: commentId },
-      { retweetsCount: count },
-    );
   }
 }

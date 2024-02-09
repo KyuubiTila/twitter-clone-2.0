@@ -1,90 +1,90 @@
+import { CommentService } from './../comment/comment.service';
 import {
   Injectable,
   NotFoundException,
   ConflictException,
+  InternalServerErrorException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Users } from 'src/auth/entities/users.entity';
-import { Comment } from 'src/comment/entities/comment.entity';
-import { CommentBookmark } from './entities/comment-bookmark.entity';
+import { CommentBookmark } from './comment-bookmark.entity';
+import { User } from 'src/auth/user.entity';
 
 @Injectable()
 export class CommentBookmarkService {
   constructor(
     @InjectRepository(CommentBookmark)
     private commentBookmarkRepository: Repository<CommentBookmark>,
-    @InjectRepository(Comment)
-    private commentRepository: Repository<Comment>,
+    private commentService: CommentService,
   ) {}
 
-  // BOOKMARK COMMENT
-  async bookmarkComment(user: Users, commentId: number): Promise<void> {
-    const commentToBookmark = await this.commentRepository.findOne({
-      where: { id: commentId },
-    });
+  async bookmarkComment(user: User, commentId: number): Promise<void> {
+    try {
+      const commentToBookmark =
+        await this.commentService.commentExists(commentId);
 
-    if (!commentToBookmark) {
-      throw new NotFoundException('Comment not found');
-    }
+      if (!commentToBookmark) {
+        throw new NotFoundException('Comment not found');
+      }
 
-    const isBookmarked = await this.commentBookmarkRepository.findOne({
-      where: {
-        userId: user.id,
-        commentId,
-      },
-    });
-
-    if (isBookmarked) {
-      throw new ConflictException('Comment has already been bookmarked by you');
-    } else {
-      const newCommentBookmark = this.commentBookmarkRepository.create({
-        user,
-        commentId,
+      const isBookmarked = await this.commentBookmarkRepository.findOne({
+        where: {
+          userId: user.id,
+          commentId,
+        },
+        select: ['id'],
       });
-      await this.commentBookmarkRepository.save(newCommentBookmark);
-    }
 
-    await this.updateCommentFavoritesCount(commentId);
-    await commentToBookmark.reload();
+      if (isBookmarked) {
+        throw new ConflictException(
+          'Comment has already been bookmarked by you',
+        );
+      } else {
+        const newCommentBookmark = this.commentBookmarkRepository.create({
+          user,
+          commentId,
+        });
+        await this.commentBookmarkRepository.insert(newCommentBookmark);
+      }
+
+      await this.commentService.updateCommentBookmarkCount(commentId);
+    } catch (error) {
+      throw new InternalServerErrorException(
+        'Failed to bookmark comment',
+        error.message,
+      );
+    }
   }
 
-  // UNBOOKMARK COMMENT
-  async unbookmarkComment(user: Users, commentId: number): Promise<void> {
-    const commentToUnbookmark = await this.commentRepository.findOne({
-      where: { id: commentId },
-    });
+  async unbookmarkComment(user: User, commentId: number): Promise<void> {
+    try {
+      const commentToUnbookmark =
+        await this.commentService.commentExists(commentId);
 
-    if (!commentToUnbookmark) {
-      throw new NotFoundException('Comment not found');
+      if (!commentToUnbookmark) {
+        throw new NotFoundException('Comment not found');
+      }
+
+      const commentBookmark = await this.commentBookmarkRepository.findOne({
+        where: {
+          userId: user.id,
+          commentId,
+        },
+        select: ['id'],
+      });
+
+      if (!commentBookmark) {
+        throw new NotFoundException('Comment has not been bookmarked by you');
+      } else {
+        await this.commentBookmarkRepository.remove(commentBookmark);
+      }
+
+      await this.commentService.updateCommentBookmarkCount(commentId);
+    } catch (error) {
+      throw new InternalServerErrorException(
+        'Failed to unbookmark comment',
+        error.message,
+      );
     }
-
-    const commentBookmark = await this.commentBookmarkRepository.findOne({
-      where: {
-        userId: user.id,
-        commentId,
-      },
-    });
-
-    if (!commentBookmark) {
-      throw new NotFoundException('Comment has not been bookmarked by you');
-    } else {
-      await this.commentBookmarkRepository.remove(commentBookmark);
-    }
-
-    await this.updateCommentFavoritesCount(commentId);
-    await commentToUnbookmark.reload();
-  }
-
-  // UPDATE COMMENT BOOKMARK COUNT
-  async updateCommentFavoritesCount(commentId: number): Promise<void> {
-    const count = await this.commentBookmarkRepository.count({
-      where: { commentId },
-    });
-
-    await this.commentRepository.update(
-      { id: commentId },
-      { bookmarksCount: count },
-    );
   }
 }

@@ -8,18 +8,18 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 
-import { Users } from 'src/auth/entities/users.entity';
-import { Comment } from 'src/comment/entities/comment.entity';
+import { User } from 'src/auth/user.entity';
+import { Comment } from 'src/comment/comment.entity';
 
-@Entity('CommentBookmarked')
-export class CommentBookmark extends BaseEntity {
+@Entity('CommentFavorited')
+export class CommentFavorited extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @ManyToOne(() => Users, (user) => user.comment_bookmarkedBy)
-  user: Users;
+  @ManyToOne(() => User, (user) => user.comment_favoritedBy)
+  user: User;
 
-  @ManyToOne(() => Comment, (comment) => comment.comment_bookmarked)
+  @ManyToOne(() => Comment, (comment) => comment.comment_favorited)
   comment: Comment;
 
   @CreateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })

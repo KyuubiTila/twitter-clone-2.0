@@ -1,86 +1,90 @@
 import {
   ConflictException,
   Injectable,
+  InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Users } from 'src/auth/entities/users.entity';
-import { Tweet } from 'src/tweet/entities/tweet.entity';
-import { TweetFavorited } from './entities/tweet-favorited.entity';
+import { User } from 'src/auth/user.entity';
+import { TweetFavorited } from './tweet-favorited.entity';
+import { TweetService } from 'src/tweet/tweet.service';
 
 @Injectable()
 export class TweetFavoritedService {
   constructor(
-    @InjectRepository(Tweet)
-    private tweetRepository: Repository<Tweet>,
     @InjectRepository(TweetFavorited)
     private tweetFavoritedRepository: Repository<TweetFavorited>,
+    private tweetService: TweetService,
   ) {}
 
   // LIKE TWEET
-  async likeTweet(user: Users, tweetId: number): Promise<void> {
-    const tweetToLike = await this.tweetRepository.findOne({
-      where: { id: tweetId },
-    });
+  async likeTweet(user: User, tweetId: number): Promise<void> {
+    try {
+      const tweetToLike = await this.tweetService.tweetExists(tweetId);
 
-    if (!tweetToLike) {
-      throw new NotFoundException('tweet not found');
-    }
+      if (!tweetToLike) {
+        throw new NotFoundException('Tweet not found');
+      }
 
-    const isLiked = await this.tweetFavoritedRepository.findOne({
-      where: {
-        userId: user.id,
-        tweetId: tweetId,
-      },
-    });
-
-    if (isLiked) {
-      throw new ConflictException('Tweet has already been liked before by you');
-    } else {
-      const newTweetLike = this.tweetFavoritedRepository.create({
-        user,
-        tweetId,
+      const isLiked = await this.tweetFavoritedRepository.findOne({
+        where: {
+          userId: user.id,
+          tweetId,
+        },
+        select: ['id'],
       });
-      await this.tweetFavoritedRepository.save(newTweetLike);
-    }
 
-    await this.updateTweetFavoritedCount(tweetId);
-    await tweetToLike.reload();
+      if (isLiked) {
+        throw new ConflictException(
+          'Tweet has already been liked before by you',
+        );
+      } else {
+        const newTweetLike = this.tweetFavoritedRepository.create({
+          user,
+          tweetId,
+        });
+        await this.tweetFavoritedRepository.insert(newTweetLike);
+      }
+
+      await this.tweetService.updateTweetFavoritedCount(tweetId);
+    } catch (error) {
+      throw new InternalServerErrorException(
+        'Failed to like tweet',
+        error.message,
+      );
+    }
   }
 
   // UNLIKE TWEET
-  async unlikeTweet(user: Users, tweetId: number): Promise<void> {
-    const tweetToUnlike = await this.tweetRepository.findOne({
-      where: { id: tweetId },
-    });
+  async unlikeTweet(user: User, tweetId: number): Promise<void> {
+    try {
+      const tweetToUnlike = await this.tweetService.tweetExists(tweetId);
 
-    if (!tweetToUnlike) {
-      throw new NotFoundException('Tweet not found');
+      if (!tweetToUnlike) {
+        throw new NotFoundException('Tweet not found');
+      }
+
+      const isLiked = await this.tweetFavoritedRepository.findOne({
+        where: {
+          userId: user.id,
+          tweetId,
+        },
+        select: ['id'],
+      });
+
+      if (!isLiked) {
+        throw new NotFoundException('Tweet has not been liked by you');
+      } else {
+        await this.tweetFavoritedRepository.remove(isLiked);
+      }
+
+      await this.tweetService.updateTweetFavoritedCount(tweetId);
+    } catch (error) {
+      throw new InternalServerErrorException(
+        'Failed to unlike tweet',
+        error.message,
+      );
     }
-
-    const isLiked = await this.tweetFavoritedRepository.findOne({
-      where: {
-        userId: user.id,
-        tweetId: tweetId,
-      },
-    });
-
-    if (!isLiked) {
-      throw new NotFoundException('Tweet has not been liked by you');
-    } else {
-      await this.tweetFavoritedRepository.remove(isLiked);
-    }
-
-    await this.updateTweetFavoritedCount(tweetId);
-    await tweetToUnlike.reload();
-  }
-
-  // UPDATE TWEET FAVORITED COUNT
-  async updateTweetFavoritedCount(tweetId: number): Promise<void> {
-    const count = await this.tweetFavoritedRepository.count({
-      where: { tweetId },
-    });
-    await this.tweetRepository.update({ id: tweetId }, { likesCount: count });
   }
 }

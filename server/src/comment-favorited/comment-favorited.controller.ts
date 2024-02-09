@@ -1,7 +1,7 @@
 import { Controller, Post, Delete, Param, UseGuards } from '@nestjs/common';
 import { CommentFavoritedService } from './comment-favorited.service';
 import { AuthGuard } from '@nestjs/passport';
-import { Users } from 'src/auth/entities/users.entity';
+import { User } from 'src/auth/user.entity';
 import { GetAuthenticatedUser } from 'src/auth/get-authenticated-user.decorator';
 
 @Controller('comment-favorited')
@@ -9,17 +9,17 @@ import { GetAuthenticatedUser } from 'src/auth/get-authenticated-user.decorator'
 export class CommentFavoritedController {
   constructor(private commentFavoritedService: CommentFavoritedService) {}
 
-  @Post(':commentId/like')
+  @Post(':commentId')
   async likeComment(
-    @GetAuthenticatedUser() user: Users,
+    @GetAuthenticatedUser() user: User,
     @Param('commentId') commentId: number,
   ): Promise<void> {
     await this.commentFavoritedService.likeComment(user, commentId);
   }
 
-  @Delete(':commentId/undo-like')
+  @Delete(':commentId')
   async unlikeComment(
-    @GetAuthenticatedUser() user: Users,
+    @GetAuthenticatedUser() user: User,
     @Param('commentId') commentId: number,
   ): Promise<void> {
     await this.commentFavoritedService.unlikeComment(user, commentId);

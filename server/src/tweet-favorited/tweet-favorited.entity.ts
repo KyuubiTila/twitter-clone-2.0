@@ -8,19 +8,19 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 
-import { Users } from 'src/auth/entities/users.entity';
-import { Comment } from 'src/comment/entities/comment.entity';
+import { User } from 'src/auth/user.entity';
+import { Tweet } from 'src/tweet/tweet.entity';
 
-@Entity('CommentFavorited')
-export class CommentFavorited extends BaseEntity {
+@Entity('TweetFavorited')
+export class TweetFavorited extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @ManyToOne(() => Users, (user) => user.comment_favoritedBy)
-  user: Users;
+  @ManyToOne(() => User, (user) => user.tweet_favoritedBy)
+  user: User;
 
-  @ManyToOne(() => Comment, (comment) => comment.comment_favorited)
-  comment: Comment;
+  @ManyToOne(() => Tweet, (tweet) => tweet.tweet_favorited)
+  tweet: Tweet;
 
   @CreateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   createdAt: Date;
@@ -36,5 +36,5 @@ export class CommentFavorited extends BaseEntity {
   userId: number;
 
   @Column()
-  commentId: number;
+  tweetId: number;
 }

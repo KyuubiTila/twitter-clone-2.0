@@ -1,8 +1,8 @@
+import { User } from 'src/auth/user.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Module } from '@nestjs/common';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
-import { Users } from './entities/users.entity';
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 import * as config from 'config';
@@ -17,7 +17,7 @@ const jwtConfig = config.get('jwt');
       secret: process.env.SECRET || jwtConfig.secret,
       signOptions: { expiresIn: '1h' },
     }),
-    TypeOrmModule.forFeature([Users]),
+    TypeOrmModule.forFeature([User]),
   ],
   controllers: [AuthController],
   providers: [JwtStrategy, AuthService],

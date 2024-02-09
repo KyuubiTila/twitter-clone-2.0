@@ -1,14 +1,15 @@
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Module } from '@nestjs/common';
 import { CommentController } from './comment.controller';
-import { Comment } from './entities/comment.entity';
+import { Comment } from './comment.entity';
 import { CommentService } from './comment.service';
-import { Tweet } from 'src/tweet/entities/tweet.entity';
 import { AuthModule } from 'src/auth/auth.module';
+import { TweetModule } from 'src/tweet/tweet.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Comment, Tweet]), AuthModule],
+  imports: [TypeOrmModule.forFeature([Comment]), AuthModule, TweetModule],
   controllers: [CommentController],
   providers: [CommentService],
+  exports: [CommentService],
 })
 export class CommentModule {}

@@ -1,5 +1,5 @@
-import { Users } from 'src/auth/entities/users.entity';
-import { Comment } from 'src/comment/entities/comment.entity';
+import { User } from 'src/auth/user.entity';
+import { Comment } from 'src/comment/comment.entity';
 import {
   BaseEntity,
   Entity,
@@ -14,8 +14,8 @@ export class CommentRetweet extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @ManyToOne(() => Users, (user) => user.comment_retweetedBy)
-  user: Users;
+  @ManyToOne(() => User, (user) => user.comment_retweetedBy)
+  user: User;
 
   @ManyToOne(() => Comment, (comment) => comment.comment_retweeted)
   comment: Comment;

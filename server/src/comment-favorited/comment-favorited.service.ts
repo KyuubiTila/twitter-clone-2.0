@@ -2,88 +2,88 @@ import {
   Injectable,
   NotFoundException,
   ConflictException,
+  InternalServerErrorException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Users } from 'src/auth/entities/users.entity';
-import { CommentFavorited } from './entities/comment-favorited.entity';
-import { Comment } from 'src/comment/entities/comment.entity';
+import { User } from 'src/auth/user.entity';
+import { CommentFavorited } from './comment-favorited.entity';
+import { CommentService } from 'src/comment/comment.service';
 
 @Injectable()
 export class CommentFavoritedService {
   constructor(
     @InjectRepository(CommentFavorited)
     private commentFavoritedRepository: Repository<CommentFavorited>,
-    @InjectRepository(Comment)
-    private commentRepository: Repository<Comment>,
+    private commentService: CommentService,
   ) {}
 
   // LIKE COMMENT
-  async likeComment(user: Users, commentId: number): Promise<void> {
-    const commentToLike = await this.commentRepository.findOne({
-      where: { id: commentId },
-    });
+  async likeComment(user: User, commentId: number): Promise<void> {
+    try {
+      const commentToLike = await this.commentService.commentExists(commentId);
 
-    if (!commentToLike) {
-      throw new NotFoundException('Comment not found');
-    }
+      if (!commentToLike) {
+        throw new NotFoundException('Comment not found');
+      }
 
-    const isLiked = await this.commentFavoritedRepository.findOne({
-      where: {
-        userId: user.id,
-        commentId,
-      },
-    });
-
-    if (isLiked) {
-      throw new ConflictException('Comment has already been liked by you');
-    } else {
-      const newCommentFavorite = this.commentFavoritedRepository.create({
-        user,
-        commentId,
+      const isLiked = await this.commentFavoritedRepository.findOne({
+        where: {
+          userId: user.id,
+          commentId,
+        },
+        select: ['id'],
       });
-      await this.commentFavoritedRepository.save(newCommentFavorite);
-    }
 
-    await this.updateCommentFavoritesCount(commentId);
-    await commentToLike.reload();
+      if (isLiked) {
+        throw new ConflictException('Comment has already been liked by you');
+      } else {
+        const newCommentFavorite = this.commentFavoritedRepository.create({
+          user,
+          commentId,
+        });
+        await this.commentFavoritedRepository.insert(newCommentFavorite);
+      }
+
+      await this.commentService.updateCommentLikesCount(commentId);
+    } catch (error) {
+      throw new InternalServerErrorException(
+        'Failed to like comment',
+        error.message,
+      );
+    }
   }
 
   // UNLIKE COMMENT
-  async unlikeComment(user: Users, commentId: number): Promise<void> {
-    const commentToUnlike = await this.commentRepository.findOne({
-      where: { id: commentId },
-    });
+  async unlikeComment(user: User, commentId: number): Promise<void> {
+    try {
+      const commentToUnlike =
+        await this.commentService.commentExists(commentId);
 
-    if (!commentToUnlike) {
-      throw new NotFoundException('Comment not found');
+      if (!commentToUnlike) {
+        throw new NotFoundException('Comment not found');
+      }
+
+      const commentFavorite = await this.commentFavoritedRepository.findOne({
+        where: {
+          userId: user.id,
+          commentId,
+        },
+        select: ['id'],
+      });
+
+      if (!commentFavorite) {
+        throw new NotFoundException('Comment has not been liked by you');
+      } else {
+        await this.commentFavoritedRepository.remove(commentFavorite);
+      }
+
+      await this.commentService.updateCommentLikesCount(commentId);
+    } catch (error) {
+      throw new InternalServerErrorException(
+        'Failed to unlike comment',
+        error.message,
+      );
     }
-
-    const commentFavorite = await this.commentFavoritedRepository.findOne({
-      where: {
-        userId: user.id,
-        commentId,
-      },
-    });
-
-    if (!commentFavorite) {
-      throw new NotFoundException('Comment has not been liked by you');
-    } else {
-      await this.commentFavoritedRepository.remove(commentFavorite);
-    }
-
-    await this.updateCommentFavoritesCount(commentId);
-    await commentToUnlike.reload();
-  }
-
-  // UPDATE COMMENT FAVORITE COUNT
-  async updateCommentFavoritesCount(commentId: number): Promise<void> {
-    const count = await this.commentFavoritedRepository.count({
-      where: { commentId },
-    });
-    await this.commentRepository.update(
-      { id: commentId },
-      { likesCount: count },
-    );
   }
 }

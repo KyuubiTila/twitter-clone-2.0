@@ -1,7 +1,7 @@
-import { Controller, Post, Param, UseGuards } from '@nestjs/common';
+import { Controller, Post, Delete, Param, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { GetAuthenticatedUser } from 'src/auth/get-authenticated-user.decorator';
-import { Users } from 'src/auth/entities/users.entity';
+import { User } from 'src/auth/user.entity';
 import { FollowService } from './follow.service';
 
 @Controller('follow')
@@ -9,18 +9,18 @@ import { FollowService } from './follow.service';
 export class FollowController {
   constructor(private readonly followService: FollowService) {}
 
-  @Post(':userId/follow')
+  @Post(':userId')
   async follow(
     @Param('userId') userId: number,
-    @GetAuthenticatedUser() user: Users,
+    @GetAuthenticatedUser() user: User,
   ): Promise<void> {
     await this.followService.follow(userId, user);
   }
 
-  @Post(':userId/unfollow')
+  @Delete(':userId')
   async unfollow(
     @Param('userId') userId: number,
-    @GetAuthenticatedUser() user: Users,
+    @GetAuthenticatedUser() user: User,
   ): Promise<void> {
     await this.followService.unfollow(userId, user);
   }

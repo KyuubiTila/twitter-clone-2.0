@@ -6,12 +6,15 @@ import {
   ParseIntPipe,
   Get,
   Patch,
+  Post,
+  Delete,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { GetAuthenticatedUser } from 'src/auth/get-authenticated-user.decorator';
-import { Users } from 'src/auth/entities/users.entity';
+import { User } from 'src/auth/user.entity';
+import { CreateProfileDto } from './dto/create-profile.dto';
 import { UpdateProfileDto } from './dto/update-profile.dto';
-import { Profile } from './entities/profile.entity';
+import { Profile } from './profile.entity';
 import { ProfileService } from './profile.service';
 
 @Controller('profile')
@@ -19,21 +22,40 @@ import { ProfileService } from './profile.service';
 export class ProfileController {
   constructor(private readonly profileService: ProfileService) {}
 
-  @Get('/:profileId')
-  getProfileById(@Param('profileId') profileId: number): Promise<Profile> {
-    return this.profileService.getProfileById(profileId);
+  @Post('/')
+  async createProfile(
+    @GetAuthenticatedUser() user: User,
+    @Body() createProfileDto: CreateProfileDto,
+  ): Promise<boolean> {
+    return await this.profileService.createProfile(user, createProfileDto);
   }
 
-  @Patch('/:profileId')
+  @Get(':profileId')
+  async getProfileById(
+    @Param('profileId') profileId: number,
+  ): Promise<Profile> {
+    return await this.profileService.getProfileById(profileId);
+  }
+
+  @Patch(':profileId')
   async updateProfile(
-    @GetAuthenticatedUser() user: Users,
+    @GetAuthenticatedUser() user: User,
     @Param('profileId', ParseIntPipe) profileId: number,
     @Body() updateProfileDto: UpdateProfileDto,
-  ): Promise<Profile> {
+  ): Promise<boolean> {
     return await this.profileService.updateProfile(
       user,
       profileId,
       updateProfileDto,
     );
+  }
+
+  // DELETE PROFILE BY ID
+  @Delete(':profileId')
+  async deleteProfile(
+    @GetAuthenticatedUser() user: User,
+    @Param('profileId') profileId: number,
+  ): Promise<boolean> {
+    return await this.profileService.deleteProfile(user, profileId);
   }
 }

@@ -3,10 +3,11 @@ import { FollowService } from './follow.service';
 import { FollowController } from './follow.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule } from 'src/auth/auth.module';
-import { Users } from 'src/auth/entities/users.entity';
+import { Follow } from './follow.entity';
+import { ProfileModule } from 'src/profile/profile.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Users]), AuthModule],
+  imports: [TypeOrmModule.forFeature([Follow]), AuthModule, ProfileModule],
   controllers: [FollowController],
   providers: [FollowService],
 })

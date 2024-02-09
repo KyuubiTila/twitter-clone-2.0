@@ -1,8 +1,8 @@
-import { Users } from 'src/auth/entities/users.entity';
-import { Comment } from 'src/comment/entities/comment.entity';
-import { TweetBookmark } from 'src/tweet-bookmark/entities/tweet-bookmark.entity';
-import { TweetFavorited } from 'src/tweet-favorited/entities/tweet-favorited.entity';
-import { TweetRetweet } from 'src/tweet-retweet/entities/tweet-retweet.entity';
+import { User } from 'src/auth/user.entity';
+import { Comment } from 'src/comment/comment.entity';
+import { TweetBookmark } from 'src/tweet-bookmark/tweet-bookmark.entity';
+import { TweetFavorited } from 'src/tweet-favorited/tweet-favorited.entity';
+import { TweetRetweet } from 'src/tweet-retweet/tweet-retweet.entity';
 import {
   BaseEntity,
   Entity,
@@ -41,8 +41,8 @@ export class Tweet extends BaseEntity {
   })
   updatedAt: Date;
 
-  @ManyToOne(() => Users, (user) => user.tweet)
-  user: Users;
+  @ManyToOne(() => User, (user) => user.tweet)
+  user: User;
 
   @OneToMany(() => Comment, (comment) => comment.tweet)
   comment: Comment[];
