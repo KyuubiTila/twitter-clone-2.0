@@ -1,8 +1,11 @@
+import { useAuth } from '@/stores/auth';
 import { useRouter } from 'next/navigation';
 // import { useRouter } from 'next/router';
 import { useState, useEffect } from 'react';
 
 const useSideBarState = () => {
+  const { logOut } = useAuth();
+
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
@@ -18,7 +21,7 @@ const useSideBarState = () => {
   const handleSignOut = () => {
     setAnchorEl(null);
     setOpen(false);
-    router.push('/signin');
+    logOut();
   };
 
   const handleSignUp = () => {
