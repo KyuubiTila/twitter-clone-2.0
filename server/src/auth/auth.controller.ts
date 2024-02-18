@@ -11,6 +11,8 @@ import {
 } from '@nestjs/common';
 import { RegisterCredentialDto } from './dto/register-credential.dto';
 import { AuthGuard } from '@nestjs/passport';
+import { GetAuthenticatedUser } from './get-authenticated-user.decorator';
+import { User } from './user.entity';
 
 @Controller('auth')
 export class AuthController {
@@ -44,5 +46,11 @@ export class AuthController {
   @Get('/:id')
   getUserById(@Param('id') id: number) {
     return this.authService.getUserByIdService(id);
+  }
+
+  @UseGuards(AuthGuard())
+  @Post('/user')
+  async getAuthUser(@GetAuthenticatedUser() user: User) {
+    return { user };
   }
 }

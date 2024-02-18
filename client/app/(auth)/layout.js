@@ -18,10 +18,6 @@ export default function AuthLayout({ children }) {
               />
             </div>
           </div>
-          {/* <div className="lg:w-6/12 container flex items-center justify-center min-h-screen px-6 mx-auto">
-            {children}
-          </div> */}
-
           {children}
         </div>
       </div>

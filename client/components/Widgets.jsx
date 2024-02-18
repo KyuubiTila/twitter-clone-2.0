@@ -25,7 +25,6 @@ const Widgets = () => {
         'https://randomuser.me/api/?results=25&inc=name,login,picture'
       );
       const data = await res.json();
-      console.log(data.results);
       SetWHoToFollow(data.results);
     }
     GetWhoToFollow();

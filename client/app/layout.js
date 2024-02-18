@@ -9,11 +9,13 @@ const inter = Inter({ subsets: ['latin'] });
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en">
-      <QueryClientProvider client={queryClient}>
-        <body className={inter.className}>{children}</body>
-        <ReactQueryDevtools initialIsOpen={false} position="bottom-right" />
-      </QueryClientProvider>
-    </html>
+    <QueryClientProvider client={queryClient}>
+      <html lang="en">
+        <body className={inter.className}>
+          {children}
+          <ReactQueryDevtools initialIsOpen={false} position="bottom-right" />
+        </body>
+      </html>
+    </QueryClientProvider>
   );
 }

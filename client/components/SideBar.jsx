@@ -1,4 +1,3 @@
-'use client';
 import React from 'react';
 import {
   Bell,
@@ -16,13 +15,7 @@ import Image from 'next/image';
 import MenuItem from './MenuItem';
 import Avatar from '@mui/material/Avatar';
 import CreateTweetCard from './CreateTweetCard';
-import {
-  Box,
-  Menu,
-  Modal,
-  MenuItem as MuiMenuItems,
-  Popover,
-} from '@mui/material';
+import { Box, Modal, MenuItem as MuiMenuItems, Popover } from '@mui/material';
 import useSideBarState from '@/utils/useSideBarState';
 
 const menuItems = [
@@ -68,7 +61,8 @@ const menuItems = [
   },
 ];
 
-const SideBar = () => {
+const SideBar = ({ user }) => {
+  const { username } = user;
   const {
     open,
     anchorEl,
@@ -110,16 +104,18 @@ const SideBar = () => {
 
       <div
         onClick={handleClickMenu}
-        className=" flex mt-10 items-center px-2.5 mb-4 hover:bg-blue-200 p-2 rounded-full cursor-pointer relative"
+        className="flex justify-between mt-10 items-center px-2.5 mb-4 hover:bg-blue-200 p-2 rounded-full cursor-pointer relative"
       >
-        <div>
-          <Avatar src="/x-big.jpg" alt="Avatar" width={10} height={10} />
-        </div>
-        <div className="text-black md:flex md:flex-col hover:text-white ml-2 hidden">
-          <p className="font-semibold">username</p>
+        <div className="flex">
+          <div>
+            <Avatar src="/x-big.jpg" alt="Avatar" width={10} height={10} />
+          </div>
+          <div className="text-black mt-2 md:flex md:flex-col hover:text-white ml-2 hidden">
+            <p className="font-semibold">{username}</p>
+          </div>
         </div>
 
-        <div className="flex pl-5 pb-1">
+        <div className="flex pl-5 pb-1 mr-3">
           <div className="text-black ml-4 hidden md:inline-flex hover:text-white">
             ...
           </div>
