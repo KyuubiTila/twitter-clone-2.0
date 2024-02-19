@@ -8,6 +8,8 @@ import {
   Patch,
   Post,
   Delete,
+  UseInterceptors,
+  UploadedFile,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { GetAuthenticatedUser } from 'src/auth/get-authenticated-user.decorator';
@@ -16,6 +18,8 @@ import { CreateProfileDto } from './dto/create-profile.dto';
 import { UpdateProfileDto } from './dto/update-profile.dto';
 import { Profile } from './profile.entity';
 import { ProfileService } from './profile.service';
+import { multerOptions } from 'src/config/multer.config';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 @Controller('profile')
 @UseGuards(AuthGuard())
@@ -23,11 +27,18 @@ export class ProfileController {
   constructor(private readonly profileService: ProfileService) {}
 
   @Post('/')
+  @UseInterceptors(FileInterceptor('image', multerOptions))
   async createProfile(
     @GetAuthenticatedUser() user: User,
     @Body() createProfileDto: CreateProfileDto,
+    @UploadedFile() file: Express.Multer.File,
   ): Promise<boolean> {
-    return await this.profileService.createProfile(user, createProfileDto);
+    console.log(file);
+    return await this.profileService.createProfile(
+      user,
+      createProfileDto,
+      file,
+    );
   }
 
   @Get(':profileId')
@@ -38,15 +49,18 @@ export class ProfileController {
   }
 
   @Patch(':profileId')
+  @UseInterceptors(FileInterceptor('file', multerOptions))
   async updateProfile(
     @GetAuthenticatedUser() user: User,
     @Param('profileId', ParseIntPipe) profileId: number,
     @Body() updateProfileDto: UpdateProfileDto,
+    @UploadedFile() file: Express.Multer.File,
   ): Promise<boolean> {
     return await this.profileService.updateProfile(
       user,
       profileId,
       updateProfileDto,
+      file,
     );
   }
 

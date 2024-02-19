@@ -23,6 +23,7 @@ export class ProfileService {
   async createProfile(
     user: User,
     createProfileDto: CreateProfileDto,
+    file: Express.Multer.File,
   ): Promise<boolean> {
     try {
       const profileAlreadyExist = await this.profileRepository.findOne({
@@ -34,10 +35,9 @@ export class ProfileService {
           'Profile already exists, you cannot create another one',
         );
       }
-
       const profile = new Profile();
       profile.bio = createProfileDto.bio;
-      profile.image = createProfileDto.image;
+      profile.image = file.filename;
       profile.userId = user.id;
 
       await this.profileRepository.insert(profile);
@@ -91,6 +91,7 @@ export class ProfileService {
     user: User,
     profileId: number,
     updateProfileDto: UpdateProfileDto,
+    file: Express.Multer.File,
   ): Promise<boolean> {
     try {
       const foundProfile = await this.getProfileById(profileId);
@@ -106,7 +107,7 @@ export class ProfileService {
           { userId: profileId },
           {
             bio: updateProfileDto.bio,
-            image: updateProfileDto.image,
+            image: file.filename,
           },
         );
         return true;
