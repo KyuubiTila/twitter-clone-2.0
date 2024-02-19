@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import FileUpload from '@/utils/Fileupload';
 
-const UpdateProfile = ({ validationSchema, initialValues }) => {
+const UpdateProfile = ({ validationSchema, initialValues, addProfile }) => {
   const [imageSrc, setImageSrc] = useState(null);
 
   return (
@@ -13,6 +13,7 @@ const UpdateProfile = ({ validationSchema, initialValues }) => {
           initialValues={initialValues}
           onSubmit={(data, params) => {
             console.log(data);
+            addProfile(data);
             params.resetForm();
             setImageSrc(null);
           }}
@@ -46,14 +47,14 @@ const UpdateProfile = ({ validationSchema, initialValues }) => {
                 PROFILE PHOTO
               </div>
               <Field
-                name="profilePhoto"
+                name="image"
                 component={FileUpload}
                 setImageSrc={setImageSrc}
                 className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light"
                 required
               />
               <span className="text-red-500">
-                <ErrorMessage name="profilePhoto" component="span" />
+                <ErrorMessage name="image" component="span" />
               </span>
             </div>
 

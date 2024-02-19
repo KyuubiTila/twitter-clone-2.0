@@ -33,7 +33,6 @@ export class ProfileController {
     @Body() createProfileDto: CreateProfileDto,
     @UploadedFile() file: Express.Multer.File,
   ): Promise<boolean> {
-    console.log(file);
     return await this.profileService.createProfile(
       user,
       createProfileDto,
@@ -49,13 +48,14 @@ export class ProfileController {
   }
 
   @Patch(':profileId')
-  @UseInterceptors(FileInterceptor('file', multerOptions))
+  @UseInterceptors(FileInterceptor('image', multerOptions))
   async updateProfile(
     @GetAuthenticatedUser() user: User,
     @Param('profileId', ParseIntPipe) profileId: number,
     @Body() updateProfileDto: UpdateProfileDto,
     @UploadedFile() file: Express.Multer.File,
   ): Promise<boolean> {
+    console.log(file);
     return await this.profileService.updateProfile(
       user,
       profileId,

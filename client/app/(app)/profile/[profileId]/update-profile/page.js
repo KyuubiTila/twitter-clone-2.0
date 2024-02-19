@@ -2,12 +2,15 @@
 import React from 'react';
 import UpdateProfile from './UpdateProfile';
 import * as Yup from 'yup';
+import { useProfile } from '@/stores/profile';
 
 const UpdateProfilePage = () => {
+  const { addProfile } = useProfile();
+
   // Define validation schema as a plain object
   const validationSchema = {
     username: Yup.string().required('You must input username'),
-    profilePhoto: Yup.string().required('You must upload a photo'),
+    image: Yup.string().required('You must upload a photo'),
     bio: Yup.string().required('You must input a bio'),
   };
 
@@ -16,7 +19,7 @@ const UpdateProfilePage = () => {
 
   const initialValues = {
     username: '',
-    profilePhoto: '',
+    image: '',
     bio: '',
   };
 
@@ -24,6 +27,7 @@ const UpdateProfilePage = () => {
     <UpdateProfile
       validationSchema={yupValidationSchema}
       initialValues={initialValues}
+      addProfile={addProfile}
     />
   );
 };

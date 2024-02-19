@@ -2,13 +2,13 @@ import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 
-const ProfileHeader = () => {
+const ProfileHeader = ({ profileId }) => {
   return (
     <div className="flex justify-center items-center">
       <div className="border border-black rounded-lg p-2">
         <div className="flex py-1 px-2 justify-between">
           <Link
-            href={'/profile/profileId/update-profile'}
+            href={`/profile/${profileId}/update-profile`}
             className="bg-blue-600 active:bg-blue-600 uppercase text-white font-bold hover:shadow-md shadow text-xs px-2 py-1 rounded outline-none focus:outline-none xs:mr-1 mb-0.5 ease-linear transition-all duration-150 inline-flex items-center"
             type="button"
           >

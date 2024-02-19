@@ -7,18 +7,18 @@ import LikesPage from './[profileId]/likes/LikesPage';
 import TweetsPage from './[profileId]/tweets/TweetsPage';
 import MediaPage from './[profileId]/media/MediaPage';
 
-const Profile = () => {
+const Profile = ({ profileId }) => {
   // Assuming you have a state to track the current tab
   const [currentTab, setCurrentTab] = useState('tweets');
 
   return (
     <>
-      <ProfileHeader />
+      <ProfileHeader profileId={profileId} />
       <div className="bg-white border border-black rounded-lg my-4">
         <div className="mt-1">
           <div className="flex justify-between items-center my-5 px-6">
             <Link
-              href={'/profile/profileId'}
+              href={`/profile/${profileId}`}
               onClick={() => setCurrentTab('tweets')}
               className={`text-gray-500 mx-2 hover:text-gray-900 hover:bg-gray-100 rounded transition duration-150 ease-in font-medium text-sm text-center w-full py-3 ${
                 currentTab === 'tweets'
@@ -29,7 +29,7 @@ const Profile = () => {
               Tweets
             </Link>
             <Link
-              href={'/profile/profileId'}
+              href={`/profile/${profileId}`}
               onClick={() => setCurrentTab('replies')}
               className={`text-gray-500 mx-2 hover:text-gray-900 hover:bg-gray-100 rounded transition duration-150 ease-in font-medium text-sm text-center w-full py-3 ${
                 currentTab === 'replies'
@@ -40,7 +40,7 @@ const Profile = () => {
               Replies
             </Link>
             <Link
-              href={'/profile/profileId'}
+              href={`/profile/${profileId}`}
               onClick={() => setCurrentTab('media')}
               className={`text-gray-500 mx-2 hover:text-gray-900 hover:bg-gray-100 rounded transition duration-150 ease-in font-medium text-sm text-center w-full py-3 ${
                 currentTab === 'media'
@@ -51,7 +51,7 @@ const Profile = () => {
               Media
             </Link>
             <Link
-              href={'/profile/profileId'}
+              href={`/profile/${profileId}`}
               onClick={() => setCurrentTab('likes')}
               className={`text-gray-500 mx-2 hover:text-gray-900 hover:bg-gray-100 rounded transition duration-150 ease-in font-medium text-sm text-center w-full py-3 ${
                 currentTab === 'likes'

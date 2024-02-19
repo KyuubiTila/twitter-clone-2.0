@@ -110,6 +110,10 @@ export class ProfileService {
             image: file.filename,
           },
         );
+        await User.update(
+          { id: user.id },
+          { username: updateProfileDto.username },
+        );
         return true;
       }
     } catch (error) {

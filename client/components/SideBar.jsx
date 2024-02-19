@@ -18,51 +18,51 @@ import CreateTweetCard from './CreateTweetCard';
 import { Box, Modal, MenuItem as MuiMenuItems, Popover } from '@mui/material';
 import useSideBarState from '@/utils/useSideBarState';
 
-const menuItems = [
-  {
-    icon: HomeIcon,
-    label: 'Home',
-    href: '/',
-  },
-  {
-    icon: Search,
-    label: 'Explore',
-    href: '/',
-  },
-  {
-    icon: Bell,
-    label: 'Notification',
-    href: '/',
-  },
-  {
-    icon: InboxIcon,
-    label: 'Messages',
-    href: '/',
-  },
-  {
-    icon: Bookmark,
-    label: 'Bookmark',
-    href: '/',
-  },
-  {
-    icon: Clipboard,
-    label: 'Lists',
-    href: '/',
-  },
-  {
-    icon: UserIcon,
-    label: 'Profile',
-    href: '/profile/profileId',
-  },
-  {
-    icon: MoreHorizontal,
-    label: 'More',
-    href: '/',
-  },
-];
-
 const SideBar = ({ user }) => {
-  const { username } = user;
+  const { username, id } = user;
+
+  const menuItems = [
+    {
+      icon: HomeIcon,
+      label: 'Home',
+      href: '/',
+    },
+    {
+      icon: Search,
+      label: 'Explore',
+      href: '/',
+    },
+    {
+      icon: Bell,
+      label: 'Notification',
+      href: '/',
+    },
+    {
+      icon: InboxIcon,
+      label: 'Messages',
+      href: '/',
+    },
+    {
+      icon: Bookmark,
+      label: 'Bookmark',
+      href: '/',
+    },
+    {
+      icon: Clipboard,
+      label: 'Lists',
+      href: '/',
+    },
+    {
+      icon: UserIcon,
+      label: 'Profile',
+      href: `/profile/${id}`,
+    },
+    {
+      icon: MoreHorizontal,
+      label: 'More',
+      href: '/',
+    },
+  ];
   const {
     open,
     anchorEl,
