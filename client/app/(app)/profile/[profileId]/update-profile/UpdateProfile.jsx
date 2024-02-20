@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import FileUpload from '@/utils/Fileupload';
 
-const UpdateProfile = ({ validationSchema, initialValues, addProfile }) => {
+const UpdateProfile = ({ validationSchema, initialValues, patchProfile }) => {
   const [imageSrc, setImageSrc] = useState(null);
 
   return (
@@ -13,7 +13,7 @@ const UpdateProfile = ({ validationSchema, initialValues, addProfile }) => {
           initialValues={initialValues}
           onSubmit={(data, params) => {
             console.log(data);
-            addProfile(data);
+            patchProfile(data);
             params.resetForm();
             setImageSrc(null);
           }}

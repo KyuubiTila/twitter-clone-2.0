@@ -1,11 +1,20 @@
 'use client';
-import React from 'react';
+import React, { useEffect } from 'react';
 import UpdateProfile from './UpdateProfile';
 import * as Yup from 'yup';
 import { useProfile } from '@/stores/profile';
 
 const UpdateProfilePage = () => {
-  const { addProfile } = useProfile();
+  const { patchProfile, profile, profileDetailsRefetch, isLoading } =
+    useProfile();
+  console.log(profile);
+
+  useEffect(() => {
+    profileDetailsRefetch();
+  }, [profileDetailsRefetch]);
+
+  const { bio } = profile || {};
+  const { username } = (profile && profile.user) || {};
 
   // Define validation schema as a plain object
   const validationSchema = {
@@ -18,17 +27,23 @@ const UpdateProfilePage = () => {
   const yupValidationSchema = Yup.object().shape(validationSchema);
 
   const initialValues = {
-    username: '',
+    username: username,
     image: '',
-    bio: '',
+    bio: bio,
   };
 
   return (
-    <UpdateProfile
-      validationSchema={yupValidationSchema}
-      initialValues={initialValues}
-      addProfile={addProfile}
-    />
+    <>
+      {isLoading ? ( // Conditionally render based on loading state
+        <p>Loading...</p>
+      ) : (
+        <UpdateProfile
+          validationSchema={yupValidationSchema}
+          initialValues={initialValues}
+          patchProfile={patchProfile}
+        />
+      )}
+    </>
   );
 };
 

@@ -7,13 +7,12 @@ import LikesPage from './[profileId]/likes/LikesPage';
 import TweetsPage from './[profileId]/tweets/TweetsPage';
 import MediaPage from './[profileId]/media/MediaPage';
 
-const Profile = ({ profileId }) => {
-  // Assuming you have a state to track the current tab
+const Profile = ({ profileId, profile }) => {
   const [currentTab, setCurrentTab] = useState('tweets');
 
   return (
     <>
-      <ProfileHeader profileId={profileId} />
+      <ProfileHeader profileId={profileId} profile={profile} />
       <div className="bg-white border border-black rounded-lg my-4">
         <div className="mt-1">
           <div className="flex justify-between items-center my-5 px-6">

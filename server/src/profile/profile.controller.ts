@@ -6,7 +6,7 @@ import {
   ParseIntPipe,
   Get,
   Patch,
-  Post,
+  // Post,
   Delete,
   UseInterceptors,
   UploadedFile,
@@ -14,7 +14,7 @@ import {
 import { AuthGuard } from '@nestjs/passport';
 import { GetAuthenticatedUser } from 'src/auth/get-authenticated-user.decorator';
 import { User } from 'src/auth/user.entity';
-import { CreateProfileDto } from './dto/create-profile.dto';
+// import { CreateProfileDto } from './dto/create-profile.dto';
 import { UpdateProfileDto } from './dto/update-profile.dto';
 import { Profile } from './profile.entity';
 import { ProfileService } from './profile.service';
@@ -26,19 +26,19 @@ import { FileInterceptor } from '@nestjs/platform-express';
 export class ProfileController {
   constructor(private readonly profileService: ProfileService) {}
 
-  @Post('/')
-  @UseInterceptors(FileInterceptor('image', multerOptions))
-  async createProfile(
-    @GetAuthenticatedUser() user: User,
-    @Body() createProfileDto: CreateProfileDto,
-    @UploadedFile() file: Express.Multer.File,
-  ): Promise<boolean> {
-    return await this.profileService.createProfile(
-      user,
-      createProfileDto,
-      file,
-    );
-  }
+  // @Post('/')
+  // @UseInterceptors(FileInterceptor('image', multerOptions))
+  // async createProfile(
+  //   @GetAuthenticatedUser() user: User,
+  //   @Body() createProfileDto: CreateProfileDto,
+  //   @UploadedFile() file: Express.Multer.File,
+  // ): Promise<boolean> {
+  //   return await this.profileService.createProfile(
+  //     user,
+  //     createProfileDto,
+  //     file,
+  //   );
+  // }
 
   @Get(':profileId')
   async getProfileById(

@@ -12,6 +12,7 @@ import { LoginCredentialDto } from './dto/login-credential.dto';
 import { JwtPayload } from './jwt-payload.interface';
 import { JwtService } from '@nestjs/jwt';
 import { User } from './user.entity';
+import { Profile } from 'src/profile/profile.entity';
 
 @Injectable()
 export class AuthService {
@@ -57,7 +58,19 @@ export class AuthService {
       user.email = email;
       user.password = await this.hashPassword(password);
 
+      // Create a profile with default values
+      const profile = new Profile();
+      profile.bio;
+      profile.image;
+      profile.followersCount;
+      profile.followingCount;
+      profile.user = user;
+
+      // Associate the profile with the user
+      user.profile = profile;
+
       await this.userRepository.insert(user);
+      await Profile.insert(profile);
       return true;
     } catch (error) {
       throw new InternalServerErrorException(

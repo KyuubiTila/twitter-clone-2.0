@@ -6,13 +6,9 @@ import {
   Column,
   CreateDateColumn,
   UpdateDateColumn,
-  ManyToMany,
   OneToOne,
-  JoinTable,
   JoinColumn,
   Unique,
-  ManyToOne,
-  OneToMany,
 } from 'typeorm';
 
 @Entity('Profile')

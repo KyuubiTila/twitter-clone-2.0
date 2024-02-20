@@ -9,7 +9,7 @@ import { Repository } from 'typeorm';
 import { Profile } from './profile.entity';
 import { UpdateProfileDto } from './dto/update-profile.dto';
 import { User } from 'src/auth/user.entity';
-import { CreateProfileDto } from './dto/create-profile.dto';
+// import { CreateProfileDto } from './dto/create-profile.dto';
 import { Follow } from 'src/follow/follow.entity';
 
 @Injectable()
@@ -20,35 +20,35 @@ export class ProfileService {
   ) {}
 
   //CREATE PROFILE
-  async createProfile(
-    user: User,
-    createProfileDto: CreateProfileDto,
-    file: Express.Multer.File,
-  ): Promise<boolean> {
-    try {
-      const profileAlreadyExist = await this.profileRepository.findOne({
-        where: { userId: user.id },
-        select: ['userId'],
-      });
-      if (profileAlreadyExist) {
-        throw new NotFoundException(
-          'Profile already exists, you cannot create another one',
-        );
-      }
-      const profile = new Profile();
-      profile.bio = createProfileDto.bio;
-      profile.image = file.filename;
-      profile.userId = user.id;
+  // async createProfile(
+  //   user: User,
+  //   createProfileDto: CreateProfileDto,
+  //   file: Express.Multer.File,
+  // ): Promise<boolean> {
+  //   try {
+  //     const profileAlreadyExist = await this.profileRepository.findOne({
+  //       where: { userId: user.id },
+  //       select: ['userId'],
+  //     });
+  //     if (profileAlreadyExist) {
+  //       throw new NotFoundException(
+  //         'Profile already exists, you cannot create another one',
+  //       );
+  //     }
+  //     const profile = new Profile();
+  //     profile.bio = createProfileDto.bio;
+  //     profile.image = file.filename;
+  //     profile.userId = user.id;
 
-      await this.profileRepository.insert(profile);
-      return true;
-    } catch (error) {
-      throw new InternalServerErrorException(
-        'Failed to create profile',
-        error.message,
-      );
-    }
-  }
+  //     await this.profileRepository.insert(profile);
+  //     return true;
+  //   } catch (error) {
+  //     throw new InternalServerErrorException(
+  //       'Failed to create profile',
+  //       error.message,
+  //     );
+  //   }
+  // }
 
   // GET PROFILE BY ID
   async getProfileById(profileId: number): Promise<Profile> {

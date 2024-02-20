@@ -1,18 +1,24 @@
 'use client';
 import React, { useEffect } from 'react';
 import Profile from '../Profle';
-import { useAuth } from '@/stores/auth';
+import { useProfile } from '@/stores/profile';
 
 const ProfilePage = ({ params }) => {
-  const { user, userDetailsRefetch } = useAuth();
+  const { profile, profileDetailsRefetch, isLoading } = useProfile();
 
   useEffect(() => {
-    userDetailsRefetch();
-  }, [userDetailsRefetch]);
+    profileDetailsRefetch();
+  }, [profileDetailsRefetch]);
 
-  const { id } = user;
-  params.profileId = id;
-  return <Profile profileId={params.profileId} />;
+  return (
+    <>
+      {isLoading ? ( // Conditionally render based on loading state
+        <p>Loading...</p>
+      ) : (
+        <Profile profileId={params.profileId} profile={profile} />
+      )}
+    </>
+  );
 };
 
 export default ProfilePage;
