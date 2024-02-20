@@ -44,13 +44,48 @@ const fetchUserProfileDetails = async (profileId) => {
   }
 };
 
+const followProfile = async ({ profileId }) => {
+  const accessToken = localStorage.getItem('accessToken');
+  try {
+    const response = await axios.post(
+      `http://localhost:3001/follow/${profileId}`,
+      {},
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    throw new Error(error.response.data.message || 'An error occurred');
+  }
+};
+
+const unfollowProfile = async ({ profileId }) => {
+  const accessToken = localStorage.getItem('accessToken');
+  try {
+    const response = await axios.delete(
+      `http://localhost:3001/follow/${profileId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    throw new Error(error.response.data.message || 'An error occurred');
+  }
+};
+
 export const useProfile = () => {
   const router = useRouter();
   const { profileId } = useParams();
 
   // UPDATE PROFILE
   const { mutate: patchProfile } = useMutation(
-    (data) => updateProfile({ data, profileId }), // Pass profileId to updateProfile function
+    (data) => updateProfile({ data, profileId }),
     {
       onSuccess: () => {
         router.push(`/profile/${profileId}`);
@@ -65,7 +100,6 @@ export const useProfile = () => {
   const {
     data: profile,
     isLoading,
-    isError,
     refetch: profileDetailsRefetch,
   } = useQuery(
     ['profileDetails', profileId],
@@ -75,10 +109,29 @@ export const useProfile = () => {
     }
   );
 
+  // FOLLOW PROFILE
+  const { mutate: follow } = useMutation(() => followProfile({ profileId }), {
+    onError: (error) => {
+      console.error('profile follow failed:', error);
+    },
+  });
+
+  // UNFOLLOW PROFILE
+  const { mutate: unfollow } = useMutation(
+    () => unfollowProfile({ profileId }),
+    {
+      onError: (error) => {
+        console.error('profile unfollow failed:', error);
+      },
+    }
+  );
+
   return {
     profile,
     profileDetailsRefetch,
     isLoading,
     patchProfile,
+    follow,
+    unfollow,
   };
 };

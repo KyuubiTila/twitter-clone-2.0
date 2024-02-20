@@ -1,21 +1,42 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useAuth } from '@/stores/auth';
+import { useProfile } from '@/stores/profile';
 
 const ProfileHeader = ({ profileId, profile }) => {
   const { user, userDetailsRefetch } = useAuth();
-  const { bio, followersCount, followingCount, userId } = profile || {};
-  const { username } = (profile && profile.user) || {};
+  const { follow, unfollow } = useProfile();
+  const { bio, followingCount, userId } = profile || {};
+  const { username, follower } = (profile && profile.user) || {};
+  const [followersCount, setFollowersCount] = useState(
+    profile?.followersCount || 0
+  );
+  const followerIds = follower.map((follower) => follower.followerId);
+  const [state, setState] = useState(followerIds.includes(user.id));
+
+  console.log(followerIds);
 
   useEffect(() => {
     userDetailsRefetch();
   }, [userDetailsRefetch]);
 
+  const handleFollow = async () => {
+    await follow();
+    setState(true);
+    setFollowersCount((prevCount) => prevCount + 1);
+  };
+
+  const handleUnfollow = async () => {
+    await unfollow();
+    setState(false);
+    setFollowersCount((prevCount) => prevCount - 1);
+  };
+
   return (
     <div className="flex justify-center items-center ">
       <div className="border border-black rounded-lg p-2 w-full">
-        <div className="flex py-1 px-2 justify-between">
+        <div className="flex py-1 px-2 justify-end">
           {user.id === userId && (
             <Link
               href={`/profile/${profileId}/update-profile`}
@@ -52,74 +73,79 @@ const ProfileHeader = ({ profileId, profile }) => {
               <p className="ml-1 mr-2">Edit Profile</p>
             </Link>
           )}
+          {user.id !== userId && (
+            <button
+              className="bg-blue-600 active:bg-blue-600 uppercase text-white font-bold hover:shadow-md shadow text-xs px-2 py-1 rounded outline-none focus:outline-none xs:mr-1 mb-0.5 ease-linear transition-all duration-150 inline-flex items-center"
+              type="button"
+            >
+              {!state ? (
+                <>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="currentColor"
+                  >
+                    <path
+                      d="M12.5 22H6.59087C5.04549 22 3.81631 21.248 2.71266 20.1966C0.453365 18.0441 4.1628 16.324 5.57757 15.4816C7.67837 14.2307 10.1368 13.7719 12.5 14.1052C13.3575 14.2261 14.1926 14.4514 15 14.7809"
+                      stroke="currentColor"
+                      strokeWidth="1.5"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                    <path
+                      d="M16.5 6.5C16.5 8.98528 14.4853 11 12 11C9.51472 11 7.5 8.98528 7.5 6.5C7.5 4.01472 9.51472 2 12 2C14.4853 2 16.5 4.01472 16.5 6.5Z"
+                      stroke="currentColor"
+                      strokeWidth="1.5"
+                    />
+                    <path
+                      d="M18.5 22L18.5 15M15 18.5H22"
+                      stroke="currentColor"
+                      strokeWidth="1.5"
+                      strokeLinecap="round"
+                    />
+                  </svg>
+                  <p className="ml-1 mr-2" onClick={handleFollow}>
+                    Follow
+                  </p>
+                </>
+              ) : (
+                <>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="currentColor"
+                  >
+                    <path
+                      d="M12.5 22H6.59087C5.04549 22 3.81631 21.248 2.71266 20.1966C0.453365 18.0441 4.1628 16.324 5.57757 15.4816C7.67837 14.2307 10.1368 13.7719 12.5 14.1052C13.3575 14.2261 14.1926 14.4514 15 14.7809"
+                      stroke="currentColor"
+                      strokeWidth="1.5"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                    <path
+                      d="M15.5 6.5C15.5 8.98528 13.4853 11 11 11C8.51472 11 6.5 8.98528 6.5 6.5C6.5 4.01472 8.51472 2 11 2C13.4853 2 15.5 4.01472 15.5 6.5Z"
+                      stroke="currentColor"
+                      strokeWidth="1.5"
+                    />
+                    <path
+                      d="M15 18.5H22"
+                      stroke="currentColor"
+                      strokeWidth="1.5"
+                      strokeLinecap="round"
+                    />
+                  </svg>
 
-          <button
-            className="bg-blue-600 active:bg-blue-600 uppercase text-white font-bold hover:shadow-md shadow text-xs px-2 py-1 rounded outline-none focus:outline-none xs:mr-1 mb-0.5 ease-linear transition-all duration-150 inline-flex items-center"
-            type="button"
-          >
-            {true ? (
-              <>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="24"
-                  height="24"
-                  viewBox="0 0 24 24"
-                  fill="currentColor"
-                >
-                  <path
-                    d="M12.5 22H6.59087C5.04549 22 3.81631 21.248 2.71266 20.1966C0.453365 18.0441 4.1628 16.324 5.57757 15.4816C7.67837 14.2307 10.1368 13.7719 12.5 14.1052C13.3575 14.2261 14.1926 14.4514 15 14.7809"
-                    stroke="currentColor"
-                    strokeWidth="1.5"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                  <path
-                    d="M16.5 6.5C16.5 8.98528 14.4853 11 12 11C9.51472 11 7.5 8.98528 7.5 6.5C7.5 4.01472 9.51472 2 12 2C14.4853 2 16.5 4.01472 16.5 6.5Z"
-                    stroke="currentColor"
-                    strokeWidth="1.5"
-                  />
-                  <path
-                    d="M18.5 22L18.5 15M15 18.5H22"
-                    stroke="currentColor"
-                    strokeWidth="1.5"
-                    strokeLinecap="round"
-                  />
-                </svg>
-                <p className="ml-1 mr-2">Follow</p>
-              </>
-            ) : (
-              <>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="24"
-                  height="24"
-                  viewBox="0 0 24 24"
-                  fill="currentColor"
-                >
-                  <path
-                    d="M12.5 22H6.59087C5.04549 22 3.81631 21.248 2.71266 20.1966C0.453365 18.0441 4.1628 16.324 5.57757 15.4816C7.67837 14.2307 10.1368 13.7719 12.5 14.1052C13.3575 14.2261 14.1926 14.4514 15 14.7809"
-                    stroke="currentColor"
-                    strokeWidth="1.5"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                  <path
-                    d="M15.5 6.5C15.5 8.98528 13.4853 11 11 11C8.51472 11 6.5 8.98528 6.5 6.5C6.5 4.01472 8.51472 2 11 2C13.4853 2 15.5 4.01472 15.5 6.5Z"
-                    stroke="currentColor"
-                    strokeWidth="1.5"
-                  />
-                  <path
-                    d="M15 18.5H22"
-                    stroke="currentColor"
-                    strokeWidth="1.5"
-                    strokeLinecap="round"
-                  />
-                </svg>
-
-                <p className="ml-1 mr-2">Unfollow</p>
-              </>
-            )}
-          </button>
+                  <p className="ml-1 mr-2" onClick={handleUnfollow}>
+                    Unfollow
+                  </p>
+                </>
+              )}
+            </button>
+          )}
         </div>
 
         <div className="flex justify-center">

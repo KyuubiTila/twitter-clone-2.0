@@ -7,8 +7,6 @@ import { useProfile } from '@/stores/profile';
 const UpdateProfilePage = () => {
   const { patchProfile, profile, profileDetailsRefetch, isLoading } =
     useProfile();
-  console.log(profile);
-
   useEffect(() => {
     profileDetailsRefetch();
   }, [profileDetailsRefetch]);
@@ -29,7 +27,7 @@ const UpdateProfilePage = () => {
   const initialValues = {
     username: username,
     image: '',
-    bio: bio,
+    bio: bio ? bio : '',
   };
 
   return (
