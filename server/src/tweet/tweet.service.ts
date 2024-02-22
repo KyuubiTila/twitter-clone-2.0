@@ -45,7 +45,14 @@ export class TweetService {
     try {
       const tweet = await this.tweetRepository.findOne({
         where: { id: tweetId },
-        relations: ['user', 'user.profile'],
+        relations: [
+          'user',
+          'user.profile',
+          'comment',
+          'tweet_favorited',
+          'tweet_retweeted',
+          'tweet_bookmarked',
+        ],
       });
 
       if (!tweet) {
@@ -203,7 +210,15 @@ export class TweetService {
   // GET ALL TWEETS
   async getAllTweets(): Promise<Tweet[]> {
     try {
-      return await this.tweetRepository.find({ relations: ['user'] });
+      return await this.tweetRepository.find({
+        relations: [
+          'user',
+          'comment',
+          'tweet_favorited',
+          'tweet_retweeted',
+          'tweet_bookmarked',
+        ],
+      });
     } catch (error) {
       throw new InternalServerErrorException(
         'Failed to retrieve all tweets',

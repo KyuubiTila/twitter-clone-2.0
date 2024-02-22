@@ -14,31 +14,11 @@ import useTweetCardStates from '@/utils/useTweetCardStates';
 import Image from 'next/image';
 import CreateCommentCard from '@/components/CreateCommentCard';
 import OnHoverCard from '@/components/OnHoverCard';
-import { useTweet } from '@/stores/tweet';
-import { useAuth } from '@/stores/auth';
+import { useEngagement } from '@/stores/engagement';
 
-const IndividualTweetCard = () => {
-  const { tweet, individualTweetRefetch, deleteTweet, updateTweet } =
-    useTweet();
-  const { user, userDetailsRefetch } = useAuth();
-
-  useEffect(() => {
-    userDetailsRefetch();
-  }, [userDetailsRefetch]);
-  useEffect(() => {
-    individualTweetRefetch();
-  }, [individualTweetRefetch]);
-
-  const {
-    bookmarksCount,
-    content,
-    id,
-    likesCount,
-    retweetsCount,
-    createdAt,
-    userId,
-  } = tweet || {};
-  const { username } = tweet?.user || {};
+const IndividualTweetCard = ({ user, tweet, deleteTweet, updateTweet }) => {
+  const { retweet, unretweet, like, unlike, bookmark, unBookmark } =
+    useEngagement();
 
   const {
     anchorEl,
@@ -54,12 +34,73 @@ const IndividualTweetCard = () => {
     handleMouseOut,
     isHovering,
   } = useTweetCardStates();
+
+  const {
+    content,
+    id,
+    createdAt,
+    userId,
+    tweet_bookmarked,
+    tweet_favorited,
+    tweet_retweeted,
+  } = tweet || {};
+  const { username } = tweet?.user || {};
+
   const [tweetText, setTweetText] = useState(content);
 
+  const retweetsIds = tweet_retweeted?.map((retweet) => retweet.userId);
+  const [isRetweet, setIsRetweet] = useState(retweetsIds?.includes(user.id));
+  const [retweetCount, setRetweetCount] = useState(tweet?.retweetsCount || 0);
+
+  const likesIds = tweet_favorited?.map((like) => like.userId);
+  const [isLiked, setIsLiked] = useState(likesIds?.includes(user.id));
+  const [likeCount, setLikeCount] = useState(tweet?.likesCount || 0);
+
+  const bookmarksIds = tweet_bookmarked?.map((like) => like.userId);
+  const [isBookmark, setIsBookmark] = useState(bookmarksIds?.includes(user.id));
+  const [bookmarkCount, setBookmarkCount] = useState(
+    tweet?.bookmarksCount || 0
+  );
+
   useEffect(() => {
-    // Update tweetText state when content changes
     setTweetText(content);
   }, [content]);
+
+  const handleRetweet = async () => {
+    await retweet(id);
+    setIsRetweet(true);
+    setRetweetCount((prevCount) => prevCount + 1);
+  };
+
+  const handleUndoRetweet = async () => {
+    await unretweet(id);
+    setIsRetweet(false);
+    setRetweetCount((prevCount) => prevCount - 1);
+  };
+
+  const handleLike = async () => {
+    await like(id);
+    setIsLiked(true);
+    setLikeCount((prevCount) => prevCount + 1);
+  };
+
+  const handleUndoLike = async () => {
+    await unlike(id);
+    setIsLiked(false);
+    setLikeCount((prevCount) => prevCount - 1);
+  };
+
+  const handleBookmark = async () => {
+    await bookmark(id);
+    setIsBookmark(true);
+    setBookmarkCount((prevCount) => prevCount + 1);
+  };
+
+  const handleUndoBookmark = async () => {
+    await unBookmark(id);
+    setIsBookmark(false);
+    setBookmarkCount((prevCount) => prevCount - 1);
+  };
 
   const handleSaveEdit = () => {
     setIsEditing(false);
@@ -196,34 +237,49 @@ const IndividualTweetCard = () => {
           </div>
           <div className="flex">
             <button className="ml-1 text-gray-500 dark:text-gray-400 font-light ">
-              {true ? (
-                <Repeat color="red" fill="red" size={20} />
+              {isRetweet ? (
+                <Repeat
+                  color="red"
+                  fill="red"
+                  size={20}
+                  onClick={handleUndoRetweet}
+                />
               ) : (
-                <Repeat color="#5755d8" size={20} />
+                <Repeat color="#5755d8" size={20} onClick={handleRetweet} />
               )}
             </button>
-            <div className="ml-1">{retweetsCount}</div>
+            <div className="ml-1">{retweetCount}</div>
           </div>
           <div className="flex">
             <button className="ml-1 text-gray-500 dark:text-gray-400 font-light ">
-              {true ? (
-                <Heart color="red" fill="red" size={20} />
+              {isLiked ? (
+                <Heart
+                  color="red"
+                  fill="red"
+                  size={20}
+                  onClick={handleUndoLike}
+                />
               ) : (
-                <Heart color="#5755d8" size={20} />
+                <Heart color="#5755d8" size={20} onClick={handleLike} />
               )}
             </button>
-            <div className="ml-1">{likesCount}</div>
+            <div className="ml-1">{likeCount}</div>
           </div>
 
           <div className=" flex">
             <button className=" ml-1 text-gray-500 dark:text-gray-400 font-light ">
-              {true ? (
-                <BookmarkCheck color="red" fill="red" size={20} />
+              {isBookmark ? (
+                <BookmarkCheck
+                  color="red"
+                  fill="red"
+                  size={20}
+                  onClick={handleUndoBookmark}
+                />
               ) : (
-                <Bookmark color="#5755d8" size={20} />
+                <Bookmark color="#5755d8" size={20} onClick={handleBookmark} />
               )}
             </button>
-            <div className="ml-1">{bookmarksCount}</div>
+            <div className="ml-1">{bookmarkCount}</div>
           </div>
         </div>
         {isEditing && (
