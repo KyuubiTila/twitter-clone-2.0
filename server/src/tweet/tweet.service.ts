@@ -30,7 +30,7 @@ export class TweetService {
       tweet.content = createTweetDto.content;
       tweet.user = user;
 
-      await this.tweetRepository.save(tweet);
+      await this.tweetRepository.insert(tweet);
       return true;
     } catch (error) {
       throw new InternalServerErrorException(
@@ -203,7 +203,7 @@ export class TweetService {
   // GET ALL TWEETS
   async getAllTweets(): Promise<Tweet[]> {
     try {
-      return await this.tweetRepository.find();
+      return await this.tweetRepository.find({ relations: ['user'] });
     } catch (error) {
       throw new InternalServerErrorException(
         'Failed to retrieve all tweets',

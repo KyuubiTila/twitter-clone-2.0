@@ -1,6 +1,5 @@
 import Link from 'next/link';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
-import { useRouter } from 'next/navigation';
 import React from 'react';
 
 const SignUp = ({ validationSchema, initialValues, register }) => {

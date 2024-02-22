@@ -5,7 +5,6 @@ const useTweetCardStates = () => {
   const [anchorEl, setAnchorEl] = useState(null);
   const [commentModalOpen, setCommentModalOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
-  const [tweetText, setTweetText] = useState('Lorem ipsum...');
   const [isHovering, setIsHovering] = useState(false);
   const handleOpenCommentModal = () => {
     setCommentModalOpen(true);
@@ -30,17 +29,6 @@ const useTweetCardStates = () => {
     setAnchorEl(null);
   };
 
-  const handleSaveEdit = () => {
-    setIsEditing(false);
-    // Handle saving edited text here
-  };
-
-  const handleCancelEdit = () => {
-    setIsEditing(false);
-    // Reset tweet text to original content
-    setTweetText('Lorem ipsum...');
-  };
-
   const handleMouseOver = () => {
     setTimeout(() => {
       setIsHovering(true);
@@ -60,15 +48,11 @@ const useTweetCardStates = () => {
     setCommentModalOpen,
     isEditing,
     setIsEditing,
-    tweetText,
-    setTweetText,
     handleOpenCommentModal,
     handleCloseCommentModal,
     handleClickMenu,
     handleCloseMenu,
     handleEditText,
-    handleSaveEdit,
-    handleCancelEdit,
     handleMouseOver,
     handleMouseOut,
     isHovering,

@@ -160,7 +160,7 @@ const SideBar = ({ user }) => {
             p: 1,
           }}
         >
-          <CreateTweetCard />
+          <CreateTweetCard open={open} handleClose={handleClose} />
         </Box>
       </Modal>
     </div>

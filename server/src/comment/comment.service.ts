@@ -1,7 +1,5 @@
 import { Repository } from 'typeorm';
-import * as bcrypt from 'bcrypt';
 import {
-  ConflictException,
   Injectable,
   NotFoundException,
   UnauthorizedException,
@@ -44,7 +42,7 @@ export class CommentService {
         tweetId: tweet.id,
       });
 
-      await this.commentRepository.save(newComment);
+      await this.commentRepository.insert(newComment);
       return true;
     } catch (error) {
       throw new InternalServerErrorException(
