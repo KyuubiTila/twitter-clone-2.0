@@ -1,4 +1,11 @@
-import { Controller, Post, Delete, Param, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Delete,
+  Param,
+  UseGuards,
+  Get,
+} from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { User } from 'src/auth/user.entity';
 import { GetAuthenticatedUser } from 'src/auth/get-authenticated-user.decorator';
@@ -25,5 +32,11 @@ export class TweetBookmarkController {
     @Param('tweetId') tweetId: number,
   ): Promise<void> {
     await this.tweetBookmarkService.unbookmarkTweet(user, tweetId);
+  }
+
+  // GET BOKKMARKED TWEET BY USER
+  @Get('user/:userId')
+  async getBookmarkedTweetsByUser(@Param('userId') userId: number) {
+    return await this.tweetBookmarkService.getBookmarkedTweetsByUser(userId);
   }
 }

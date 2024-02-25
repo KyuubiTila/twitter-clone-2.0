@@ -14,14 +14,28 @@ import Link from 'next/link';
 import CreateCommentCard from './CreateCommentCard';
 import useTweetCardStates from '@/utils/useTweetCardStates';
 import Image from 'next/image';
-import OnHoverCard from './OnHoverCard';
 import { useAuth } from '@/stores/auth';
 import { useEngagement } from '@/stores/tweetEngagement';
+import { useTweet } from '@/stores/tweet';
+import { useCommentEngagement } from '@/stores/commentEngagement';
+import { useComment } from '@/stores/comment';
 
-const TweetCard = ({ tweet, deleteTweet, updateTweet }) => {
+const ProfileTweetAndCommentCard = ({ tweet }) => {
   const { user, userDetailsRefetch } = useAuth();
+  const { deleteTweet, updateTweet } = useTweet();
+  const { deleteComment: commentDelete, updateComment: commentUpdate } =
+    useComment();
+
   const { retweet, unretweet, like, unlike, bookmark, unBookmark } =
     useEngagement();
+  const {
+    retweet: commentRetweet,
+    unretweet: commentUnretweet,
+    like: commentLike,
+    unlike: commentUnlike,
+    bookmark: commentBookmark,
+    unBookmark: commentUnbookmark,
+  } = useCommentEngagement();
 
   useEffect(() => {
     userDetailsRefetch();
@@ -35,62 +49,72 @@ const TweetCard = ({ tweet, deleteTweet, updateTweet }) => {
     tweet_bookmarked,
     tweet_favorited,
     tweet_retweeted,
-  } = tweet;
+    comment_retweeted,
+    comment_favorited,
+    comment_bookmarked,
+  } = tweet.tweet || tweet.comment;
 
-  const { username, follower } = tweet?.user;
-  const {
-    bio,
-    followersCount,
-    followingCount,
-    userId: profileUserId,
-  } = tweet?.user?.profile || {};
+  const { tweetId } = tweet;
 
-  const retweetsIds = tweet_retweeted?.map((retweet) => retweet.userId);
+  const isTweet = tweetId !== undefined;
+  const { username } = tweet?.tweet?.user || tweet?.comment?.user || {};
+
+  const retweetsIds =
+    tweet_retweeted?.map((retweet) => retweet.userId) ||
+    comment_retweeted.map((retweet) => retweet.userId);
   const [isRetweet, setIsRetweet] = useState(retweetsIds?.includes(user.id));
-  const [retweetCount, setRetweetCount] = useState(tweet?.retweetsCount || 0);
+  const [retweetCount, setRetweetCount] = useState(
+    tweet?.tweet?.retweetsCount || tweet?.comment?.retweetsCount || 0
+  );
 
-  const likesIds = tweet_favorited?.map((like) => like.userId);
+  const likesIds =
+    tweet_favorited?.map((like) => like.userId) ||
+    comment_favorited.map((retweet) => retweet.userId);
   const [isLiked, setIsLiked] = useState(likesIds?.includes(user.id));
-  const [likeCount, setLikeCount] = useState(tweet?.likesCount || 0);
+  const [likeCount, setLikeCount] = useState(
+    tweet?.tweet?.likesCount || tweet?.comment?.likesCount || 0
+  );
 
-  const bookmarksIds = tweet_bookmarked?.map((like) => like.userId);
+  const bookmarksIds =
+    tweet_bookmarked?.map((like) => like.userId) ||
+    comment_bookmarked.map((retweet) => retweet.userId);
   const [isBookmark, setIsBookmark] = useState(bookmarksIds?.includes(user.id));
   const [bookmarkCount, setBookmarkCount] = useState(
-    tweet?.bookmarksCount || 0
+    tweet?.tweet?.bookmarksCount || tweet?.comment?.bookmarksCount || 0
   );
 
   const handleRetweet = async () => {
-    await retweet(id);
+    isTweet ? await retweet(id) : commentRetweet(id);
     setIsRetweet(true);
     setRetweetCount((prevCount) => prevCount + 1);
   };
 
   const handleUndoRetweet = async () => {
-    await unretweet(id);
+    isTweet ? await unretweet(id) : commentUnretweet(id);
     setIsRetweet(false);
     setRetweetCount((prevCount) => prevCount - 1);
   };
 
   const handleLike = async () => {
-    await like(id);
+    isTweet ? await like(id) : commentLike(id);
     setIsLiked(true);
     setLikeCount((prevCount) => prevCount + 1);
   };
 
   const handleUndoLike = async () => {
-    await unlike(id);
+    isTweet ? await unlike(id) : commentUnlike(id);
     setIsLiked(false);
     setLikeCount((prevCount) => prevCount - 1);
   };
 
   const handleBookmark = async () => {
-    await bookmark(id);
+    isTweet ? await bookmark(id) : commentBookmark(id);
     setIsBookmark(true);
     setBookmarkCount((prevCount) => prevCount + 1);
   };
 
   const handleUndoBookmark = async () => {
-    await unBookmark(id);
+    isTweet ? await unBookmark(id) : commentUnbookmark(id);
     setIsBookmark(false);
     setBookmarkCount((prevCount) => prevCount - 1);
   };
@@ -121,13 +145,16 @@ const TweetCard = ({ tweet, deleteTweet, updateTweet }) => {
     setIsEditing,
     handleMouseOver,
     handleMouseOut,
-    isHovering,
   } = useTweetCardStates();
-  const [tweetText, setTweetText] = useState(tweet.content ? content : '');
+  const [tweetText, setTweetText] = useState(
+    tweet?.tweet?.content || tweet?.comment?.content ? content : ''
+  );
 
   const handleSaveEdit = () => {
     setIsEditing(false);
-    updateTweet({ content: tweetText, tweetId: id });
+    isTweet
+      ? updateTweet({ content: tweetText, tweetId: id })
+      : commentUpdate({ content: tweetText, commentId: id });
   };
 
   const handleCancelEdit = () => {
@@ -137,7 +164,7 @@ const TweetCard = ({ tweet, deleteTweet, updateTweet }) => {
 
   const handleDelete = () => {
     handleCloseMenu();
-    deleteTweet(id);
+    isTweet ? deleteTweet(id) : commentDelete(id);
   };
 
   return (
@@ -157,29 +184,6 @@ const TweetCard = ({ tweet, deleteTweet, updateTweet }) => {
                   onMouseOut={handleMouseOut}
                 />
               </Link>
-
-              {isHovering && (
-                <div
-                  style={{
-                    position: 'absolute',
-                    top: '100%',
-                    left: '100%',
-                    borderRadius: '100px',
-                    width: '20em',
-                  }}
-                  onMouseOver={handleMouseOver}
-                  onMouseOut={handleMouseOut}
-                >
-                  <OnHoverCard
-                    username={username}
-                    bio={bio}
-                    followersCount={followersCount}
-                    followingCount={followingCount}
-                    profileUserId={profileUserId}
-                    follower={follower}
-                  />
-                </div>
-              )}
             </div>
             <div className="ml-2 mt-1">
               <Link href={`/profile/${userId}`}>
@@ -196,42 +200,63 @@ const TweetCard = ({ tweet, deleteTweet, updateTweet }) => {
               </Link>
             </div>
           </div>
-          {user.id === userId && (
-            <div>
-              <button
-                onClick={handleClickMenu}
-                className="text-gray-500 dark:text-gray-400 font-light"
+          <div className="flex justify-end">
+            {isTweet ? (
+              <span
+                href="#_"
+                className={`mb-2 px-1.5 py-2.5 font-medium bg-blue-50 hover:bg-blue-100 hover:text-blue-600 text-blue-500 rounded-lg text-sm ${
+                  user.id === userId ? 'mr-2' : ''
+                }`}
               >
-                ...
-              </button>
-              <Menu
-                anchorEl={anchorEl}
-                open={Boolean(anchorEl)}
-                onClose={handleCloseMenu}
-                transformOrigin={{
-                  vertical: 'top',
-                  horizontal: 'left',
-                }}
+                tweet
+              </span>
+            ) : (
+              <span
+                href="#_"
+                className={`mb-2 px-1.5 py-2.5 font-medium bg-blue-50 hover:bg-blue-100 hover:text-blue-600 text-blue-500 rounded-lg text-sm ${
+                  user.id === userId ? 'mr-2' : ''
+                }`}
               >
-                <MenuItem onClick={handleEditText}>
-                  <div className="flex items-center w-full">
-                    <button className="ml-1 text-gray-500 dark:text-gray-400 font-light ">
-                      <Pencil color="#5755d8" size={20} />
-                    </button>
-                    <span className="ml-2">Edit</span>
-                  </div>
-                </MenuItem>
-                <MenuItem onClick={handleDelete}>
-                  <div className="flex items-center w-full">
-                    <button className="ml-1 text-gray-500 dark:text-gray-400 font-light ">
-                      <Trash2 color="#5755d8" size={20} />
-                    </button>
-                    <span className="ml-2">Delete</span>
-                  </div>
-                </MenuItem>
-              </Menu>
-            </div>
-          )}
+                comment
+              </span>
+            )}
+            {user.id === userId && (
+              <div className="">
+                <button
+                  onClick={handleClickMenu}
+                  className="text-gray-500 mt-1 dark:text-gray-400 font-light"
+                >
+                  ...
+                </button>
+                <Menu
+                  anchorEl={anchorEl}
+                  open={Boolean(anchorEl)}
+                  onClose={handleCloseMenu}
+                  transformOrigin={{
+                    vertical: 'top',
+                    horizontal: 'left',
+                  }}
+                >
+                  <MenuItem onClick={handleEditText}>
+                    <div className="flex items-center w-full">
+                      <button className="ml-1 text-gray-500 dark:text-gray-400 font-light ">
+                        <Pencil color="#5755d8" size={20} />
+                      </button>
+                      <span className="ml-2">Edit</span>
+                    </div>
+                  </MenuItem>
+                  <MenuItem onClick={handleDelete}>
+                    <div className="flex items-center w-full">
+                      <button className="ml-1 text-gray-500 dark:text-gray-400 font-light ">
+                        <Trash2 color="#5755d8" size={20} />
+                      </button>
+                      <span className="ml-2">Delete</span>
+                    </div>
+                  </MenuItem>
+                </Menu>
+              </div>
+            )}
+          </div>
         </div>
         {isEditing ? (
           <TextField
@@ -244,7 +269,7 @@ const TweetCard = ({ tweet, deleteTweet, updateTweet }) => {
           />
         ) : (
           <Link
-            href={`/tweet/${id}`}
+            href={isTweet ? `/tweet/${id}` : `/comment/${id}`}
             className="text-xs text-gray-800 dark:text-gray-100 leading-snug lg:line-clamp-2 md:line-clamp-3 sm:line-clamp-4 overflow-hidden"
           >
             {tweetText}
@@ -350,4 +375,4 @@ const TweetCard = ({ tweet, deleteTweet, updateTweet }) => {
   );
 };
 
-export default TweetCard;
+export default ProfileTweetAndCommentCard;

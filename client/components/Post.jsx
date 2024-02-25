@@ -6,7 +6,6 @@ import { useTweet } from '@/stores/tweet';
 const Post = () => {
   const { tweets, tweetsRefetch, tweetsIsLoading, deleteTweet, updateTweet } =
     useTweet();
-
   useEffect(() => {
     tweetsRefetch();
   }, [tweetsRefetch]);

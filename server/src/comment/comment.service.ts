@@ -57,7 +57,14 @@ export class CommentService {
     try {
       const comment = await this.commentRepository.findOneOrFail({
         where: { id: commentId },
-        relations: ['user', 'user.profile'],
+        relations: [
+          'user',
+          'user.profile',
+          'user.follower',
+          'comment_favorited',
+          'comment_retweeted',
+          'comment_bookmarked',
+        ],
       });
 
       return comment;
@@ -80,7 +87,6 @@ export class CommentService {
           'You are not authorized to update this comment',
         );
       }
-
       await this.commentRepository.update(
         { id: commentId },
         { content: updateCommentDto.content },
@@ -98,6 +104,7 @@ export class CommentService {
   async deleteComment(user: User, commentId: number): Promise<boolean> {
     try {
       const commentToDelete = await this.returnCommentUserId(commentId);
+      console.log(commentToDelete);
 
       if (commentToDelete.userId !== user.id) {
         throw new UnauthorizedException(
@@ -120,7 +127,14 @@ export class CommentService {
     try {
       return await this.commentRepository.find({
         where: { tweetId },
-        relations: ['user', 'user.profile'],
+        relations: [
+          'user',
+          'user.profile',
+          'user.follower',
+          'comment_favorited',
+          'comment_retweeted',
+          'comment_bookmarked',
+        ],
       });
     } catch (error) {
       throw new InternalServerErrorException(
@@ -135,7 +149,7 @@ export class CommentService {
     try {
       const comment = await this.commentRepository.findOneOrFail({
         where: { id: commentId },
-        select: ['userId'],
+        // select: ['userId'],
       });
 
       return comment;

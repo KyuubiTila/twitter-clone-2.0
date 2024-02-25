@@ -87,4 +87,29 @@ export class CommentBookmarkService {
       );
     }
   }
+
+  // GET BOOKMARKED COMMENTS  BY USER
+  async getBookmarkedCommentsByUser(
+    userId: number,
+  ): Promise<CommentBookmark[]> {
+    try {
+      const commentBookmarks = await this.commentBookmarkRepository.find({
+        where: { userId },
+        relations: [
+          'comment',
+          'user',
+          'user.follower',
+          'comment.comment_favorited',
+          'comment.comment_retweeted',
+          'comment.comment_bookmarked',
+        ],
+      });
+      return commentBookmarks;
+    } catch (error) {
+      throw new InternalServerErrorException(
+        'Failed to fetch bookmarked comments',
+        error.message,
+      );
+    }
+  }
 }

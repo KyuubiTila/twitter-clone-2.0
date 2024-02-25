@@ -85,4 +85,27 @@ export class TweetBookmarkService {
       );
     }
   }
+
+  // GET BOKKMARKED TWEET BY USER
+  async getBookmarkedTweetsByUser(userId: number): Promise<TweetBookmark[]> {
+    try {
+      const commentBookmarks = await this.tweetBookmarkRepository.find({
+        where: { userId },
+        relations: [
+          'tweet',
+          'user',
+          'user.follower',
+          'tweet.tweet_favorited',
+          'tweet.tweet_retweeted',
+          'tweet.tweet_bookmarked',
+        ],
+      });
+      return commentBookmarks;
+    } catch (error) {
+      throw new InternalServerErrorException(
+        'Failed to fetch bookmarked tweets',
+        error.message,
+      );
+    }
+  }
 }

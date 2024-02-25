@@ -87,4 +87,27 @@ export class TweetFavoritedService {
       );
     }
   }
+
+  // GET FAVORITED TWEETS BY USER
+  async getFavoritedTweetsByUser(userId: number): Promise<TweetFavorited[]> {
+    try {
+      const commentBookmarks = await this.tweetFavoritedRepository.find({
+        where: { userId },
+        relations: [
+          'tweet',
+          'user',
+          'user.follower',
+          'tweet.tweet_favorited',
+          'tweet.tweet_retweeted',
+          'tweet.tweet_bookmarked',
+        ],
+      });
+      return commentBookmarks;
+    } catch (error) {
+      throw new InternalServerErrorException(
+        'Failed to fetch favorited tweets',
+        error.message,
+      );
+    }
+  }
 }

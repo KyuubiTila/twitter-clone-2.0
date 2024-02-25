@@ -79,16 +79,52 @@ const unfollowProfile = async ({ profileId }) => {
   }
 };
 
-export const useProfile = () => {
+const getretweetedTweetsForProfile = async (userId) => {
+  const accessToken = localStorage.getItem('accessToken');
+  try {
+    const response = await axios.get(
+      `http://localhost:3001/tweets-retweets/user/${userId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    throw new Error(error.response.data.message || 'An error occurred');
+  }
+};
+
+const getretweetedCommentsForProfile = async (userId) => {
+  const accessToken = localStorage.getItem('accessToken');
+  try {
+    const response = await axios.get(
+      `http://localhost:3001/comment-retweet/user/${userId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    );
+    console.log(response.data);
+    return response.data;
+  } catch (error) {
+    throw new Error(error.response.data.message || 'An error occurred');
+  }
+};
+
+export const useProfile = (initialProfileId) => {
   const router = useRouter();
-  const { profileId } = useParams();
+  const { profileId, userId } = useParams();
+  const resolvedProfileId = profileId || userId || initialProfileId;
 
   // UPDATE PROFILE
   const { mutate: patchProfile } = useMutation(
-    (data) => updateProfile({ data, profileId }),
+    (data) => updateProfile({ data, profileId: resolvedProfileId }),
     {
       onSuccess: () => {
-        router.push(`/profile/${profileId}`);
+        router.push(`/profile/${resolvedProfileId}`);
       },
       onError: (error) => {
         console.error('profile update failed:', error);
@@ -102,27 +138,56 @@ export const useProfile = () => {
     isLoading,
     refetch: profileDetailsRefetch,
   } = useQuery(
-    ['profileDetails', profileId],
-    () => fetchUserProfileDetails(profileId),
+    ['profileDetails', resolvedProfileId],
+    () => fetchUserProfileDetails(resolvedProfileId),
     {
-      enabled: !!profileId,
+      enabled: !!resolvedProfileId,
     }
   );
 
   // FOLLOW PROFILE
-  const { mutate: follow } = useMutation(() => followProfile({ profileId }), {
-    onError: (error) => {
-      console.error('profile follow failed:', error);
-    },
-  });
+  const { mutate: follow } = useMutation(
+    () => followProfile({ profileId: resolvedProfileId }),
+    {
+      onError: (error) => {
+        console.error('profile follow failed:', error);
+      },
+    }
+  );
 
   // UNFOLLOW PROFILE
   const { mutate: unfollow } = useMutation(
-    () => unfollowProfile({ profileId }),
+    () => unfollowProfile({ profileId: resolvedProfileId }),
     {
       onError: (error) => {
         console.error('profile unfollow failed:', error);
       },
+    }
+  );
+
+  // GET  RETWEETED TWEETS BY USER
+  const {
+    data: retweetedTweetsForProfile,
+    isLoading: isLoadingRetweetedTweetsForProfile,
+    refetch: retweetedTweetsForProfileRefetch,
+  } = useQuery(
+    ['retweetedTweetsForProfile', resolvedProfileId],
+    () => getretweetedTweetsForProfile(resolvedProfileId),
+    {
+      enabled: !!resolvedProfileId,
+    }
+  );
+
+  // GET  RETWEETED COMMENT BY USER
+  const {
+    data: retweetedCommentsForProfile,
+    isLoading: isLoadingRetweetedCommentsForProfile,
+    refetch: retweetedCommentsForProfileRefetch,
+  } = useQuery(
+    ['retweetedCommentsForProfile', resolvedProfileId],
+    () => getretweetedCommentsForProfile(resolvedProfileId),
+    {
+      enabled: !!resolvedProfileId,
     }
   );
 
@@ -133,5 +198,11 @@ export const useProfile = () => {
     patchProfile,
     follow,
     unfollow,
+    retweetedTweetsForProfile,
+    isLoadingRetweetedTweetsForProfile,
+    retweetedTweetsForProfileRefetch,
+    retweetedCommentsForProfile,
+    isLoadingRetweetedCommentsForProfile,
+    retweetedCommentsForProfileRefetch,
   };
 };

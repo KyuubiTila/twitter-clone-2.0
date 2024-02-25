@@ -1,5 +1,4 @@
 'use client';
-
 import { SearchIcon } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import Button from '@mui/material/Button';

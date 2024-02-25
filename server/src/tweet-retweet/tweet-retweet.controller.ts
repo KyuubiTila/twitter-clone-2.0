@@ -1,4 +1,11 @@
-import { Controller, Post, Delete, Param, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Delete,
+  Param,
+  UseGuards,
+  Get,
+} from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { GetAuthenticatedUser } from 'src/auth/get-authenticated-user.decorator';
 import { User } from 'src/auth/user.entity';
@@ -23,5 +30,11 @@ export class TweetRetweetController {
     @Param('tweetId') tweetId: number,
   ): Promise<void> {
     await this.tweetRetweetService.undoRetweetTweet(user, tweetId);
+  }
+
+  // GET RETWEETED TWEETS BY USER
+  @Get('user/:userId')
+  async getRetweetedTweetsByUser(@Param('userId') userId: number) {
+    return await this.tweetRetweetService.getRetweetedTweetsByUser(userId);
   }
 }

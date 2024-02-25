@@ -89,4 +89,28 @@ export class CommentRetweetService {
       );
     }
   }
+
+  // GET RETWEETED COMMENTS BY USER
+  async getRetweetedCommentsByUser(userId: number): Promise<CommentRetweet[]> {
+    try {
+      const commentRetweets = await this.commentRetweetRepository.find({
+        where: { userId },
+        relations: [
+          'comment',
+          'comment.user',
+          'comment.user.follower',
+          'comment.user.profile',
+          'comment.comment_favorited',
+          'comment.comment_retweeted',
+          'comment.comment_bookmarked',
+        ],
+      });
+      return commentRetweets;
+    } catch (error) {
+      throw new InternalServerErrorException(
+        'Failed to fetch retweeted comments',
+        error.message,
+      );
+    }
+  }
 }

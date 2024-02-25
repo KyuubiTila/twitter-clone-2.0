@@ -52,6 +52,7 @@ export class TweetService {
           'tweet_favorited',
           'tweet_retweeted',
           'tweet_bookmarked',
+          'user.follower',
         ],
       });
 
@@ -64,6 +65,29 @@ export class TweetService {
     } catch (error) {
       throw new InternalServerErrorException(
         'Failed to retrieve tweet',
+        error.message,
+      );
+    }
+  }
+
+  // GET ALL TWEETS CREATED BY USER
+  async getAllTweetsByUserId(userId: number): Promise<Tweet[]> {
+    try {
+      return await this.tweetRepository.find({
+        where: { userId },
+        relations: [
+          'user',
+          'comment',
+          'tweet_favorited',
+          'tweet_retweeted',
+          'tweet_bookmarked',
+          'user.profile',
+          'user.follower',
+        ],
+      });
+    } catch (error) {
+      throw new InternalServerErrorException(
+        'Failed to retrieve all tweets by user ID',
         error.message,
       );
     }
@@ -217,6 +241,8 @@ export class TweetService {
           'tweet_favorited',
           'tweet_retweeted',
           'tweet_bookmarked',
+          'user.profile',
+          'user.follower',
         ],
       });
     } catch (error) {

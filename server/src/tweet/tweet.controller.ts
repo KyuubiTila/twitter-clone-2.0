@@ -34,6 +34,11 @@ export class TweetController {
     return this.tweetService.getTweetById(tweetId);
   }
 
+  @Get('user/:userId')
+  async getAllTweetsByUserId(@Param('userId') userId: number) {
+    return await this.tweetService.getAllTweetsByUserId(userId);
+  }
+
   @Patch(':tweetId')
   async updateTweet(
     @GetAuthenticatedUser() user: User,

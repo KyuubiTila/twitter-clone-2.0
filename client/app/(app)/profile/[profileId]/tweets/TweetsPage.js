@@ -1,14 +1,24 @@
-import TweetCard from '@/components/TweetRenderCard';
 import React from 'react';
+import ProfileTweetAndCommentCard from '@/components/ProfileTweetAndCommentCard';
 
-const TweetsPage = () => {
+const TweetsPage = ({
+  retweetedTweetsForProfile,
+  retweetedCommentsForProfile,
+}) => {
   return (
-    <div className="w-full">
-      {/* <TweetCard /> */}
-      <div className="mt-5 mb-5 w-full flex flex-col items-center overflow-hidden text-sm">
-        <h1>Coming soon</h1>
+    <>
+      <div className="w-full">
+        {retweetedTweetsForProfile.map((tweet) => (
+          <ProfileTweetAndCommentCard key={tweet.id} tweet={tweet} />
+        ))}
       </div>
-    </div>
+
+      <div className="w-full">
+        {retweetedCommentsForProfile.map((tweet) => (
+          <ProfileTweetAndCommentCard key={tweet.id} tweet={tweet} />
+        ))}
+      </div>
+    </>
   );
 };
 

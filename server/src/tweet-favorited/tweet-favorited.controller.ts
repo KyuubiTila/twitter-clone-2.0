@@ -1,4 +1,11 @@
-import { Controller, Post, Delete, Param, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Delete,
+  Param,
+  UseGuards,
+  Get,
+} from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { GetAuthenticatedUser } from 'src/auth/get-authenticated-user.decorator';
 import { User } from 'src/auth/user.entity';
@@ -24,5 +31,11 @@ export class TweetFavoritedController {
     @Param('tweetId') tweetId: number,
   ): Promise<void> {
     await this.tweetFavoritedService.unlikeTweet(user, tweetId);
+  }
+
+  // GET FAVORITED TWEETS BY USER
+  @Get('user/:userId')
+  async getFavoritedTweetsByUser(@Param('userId') userId: number) {
+    return await this.tweetFavoritedService.getFavoritedTweetsByUser(userId);
   }
 }

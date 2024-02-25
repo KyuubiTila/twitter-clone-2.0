@@ -3,14 +3,14 @@ import {
   Bell,
   Bookmark,
   Clipboard,
-  HomeIcon,
-  InboxIcon,
   LogOut,
   MoreHorizontal,
   Search,
   UserIcon,
   Users,
 } from 'lucide-react';
+import CottageOutlinedIcon from '@mui/icons-material/CottageOutlined';
+import MarkunreadOutlinedIcon from '@mui/icons-material/MarkunreadOutlined';
 import Image from 'next/image';
 import MenuItem from './MenuItem';
 import Avatar from '@mui/material/Avatar';
@@ -20,10 +20,9 @@ import useSideBarState from '@/utils/useSideBarState';
 
 const SideBar = ({ user }) => {
   const { username, id } = user;
-
   const menuItems = [
     {
-      icon: HomeIcon,
+      icon: CottageOutlinedIcon,
       label: 'Home',
       href: '/',
     },
@@ -38,7 +37,7 @@ const SideBar = ({ user }) => {
       href: '/',
     },
     {
-      icon: InboxIcon,
+      icon: MarkunreadOutlinedIcon,
       label: 'Messages',
       href: '/',
     },

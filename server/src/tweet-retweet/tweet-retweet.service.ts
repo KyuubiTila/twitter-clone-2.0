@@ -87,4 +87,28 @@ export class TweetRetweetService {
       );
     }
   }
+
+  // GET RETWEETED TWEETS BY USER
+  async getRetweetedTweetsByUser(userId: number): Promise<TweetRetweet[]> {
+    try {
+      const tweetRetweets = await this.tweetRetweetRepository.find({
+        where: { userId },
+        relations: [
+          'tweet',
+          'tweet.user',
+          'tweet.user.follower',
+          'tweet.user.profile',
+          'tweet.tweet_favorited',
+          'tweet.tweet_retweeted',
+          'tweet.tweet_bookmarked',
+        ],
+      });
+      return tweetRetweets;
+    } catch (error) {
+      throw new InternalServerErrorException(
+        'Failed to fetch retweeted tweets',
+        error.message,
+      );
+    }
+  }
 }

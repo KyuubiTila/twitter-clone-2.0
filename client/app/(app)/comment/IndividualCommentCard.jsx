@@ -14,21 +14,19 @@ import useTweetCardStates from '@/utils/useTweetCardStates';
 import Image from 'next/image';
 import CreateCommentCard from '@/components/CreateCommentCard';
 import OnHoverCard from '@/components/OnHoverCard';
-import { useEngagement } from '@/stores/tweetEngagement';
 import CommentCard from '@/components/CommentRenderCard';
 import Link from 'next/link';
+import { useCommentEngagement } from '@/stores/commentEngagement';
 
-const IndividualTweetCard = ({
+const IndividualCommentCard = ({
   user,
-  tweet,
-  deleteTweet,
-  updateTweet,
-  allComments,
+  individualComment,
   deleteComment,
   updateComment,
+  allComments,
 }) => {
   const { retweet, unretweet, like, unlike, bookmark, unBookmark } =
-    useEngagement();
+    useCommentEngagement();
 
   const {
     anchorEl,
@@ -50,32 +48,37 @@ const IndividualTweetCard = ({
     id,
     createdAt,
     userId,
-    tweet_bookmarked,
-    tweet_favorited,
-    tweet_retweeted,
-  } = tweet;
+    comment_bookmarked,
+    comment_favorited,
+    comment_retweeted,
+  } = individualComment;
+
   const {
     bio,
     followersCount,
     followingCount,
     userId: profileUserId,
-  } = tweet?.user?.profile;
-  const { username, follower } = tweet?.user || {};
-
+  } = individualComment?.user?.profile;
+  const { username, follower } = individualComment?.user || {};
+  // console.log(individualComment);
   const [tweetText, setTweetText] = useState(content);
 
-  const retweetsIds = tweet_retweeted?.map((retweet) => retweet.userId);
+  const retweetsIds = comment_retweeted?.map((retweet) => retweet.userId);
   const [isRetweet, setIsRetweet] = useState(retweetsIds?.includes(user.id));
-  const [retweetCount, setRetweetCount] = useState(tweet?.retweetsCount || 0);
+  const [retweetCount, setRetweetCount] = useState(
+    individualComment?.retweetsCount || 0
+  );
 
-  const likesIds = tweet_favorited?.map((like) => like.userId);
+  const likesIds = comment_favorited?.map((like) => like.userId);
   const [isLiked, setIsLiked] = useState(likesIds?.includes(user.id));
-  const [likeCount, setLikeCount] = useState(tweet?.likesCount || 0);
+  const [likeCount, setLikeCount] = useState(
+    individualComment?.likesCount || 0
+  );
 
-  const bookmarksIds = tweet_bookmarked?.map((like) => like.userId);
+  const bookmarksIds = comment_bookmarked?.map((like) => like.userId);
   const [isBookmark, setIsBookmark] = useState(bookmarksIds?.includes(user.id));
   const [bookmarkCount, setBookmarkCount] = useState(
-    tweet?.bookmarksCount || 0
+    individualComment?.bookmarksCount || 0
   );
 
   useEffect(() => {
@@ -120,7 +123,7 @@ const IndividualTweetCard = ({
 
   const handleSaveEdit = () => {
     setIsEditing(false);
-    updateTweet({ content: tweetText, tweetId: id });
+    updateComment({ content: tweetText, commentId: id });
   };
 
   const handleCancelEdit = () => {
@@ -130,7 +133,7 @@ const IndividualTweetCard = ({
 
   const handleDelete = () => {
     handleCloseMenu();
-    deleteTweet(id);
+    deleteComment(id);
   };
 
   const formatDate = (timestamp) => {
@@ -147,7 +150,7 @@ const IndividualTweetCard = ({
 
   const formattedDateTime = formatDate(createdAt);
 
-  return tweet ? (
+  return individualComment ? (
     <div>
       <div className="p-1 bg-gray-50 dark:bg-yellow-900 flex items-center justify-center max-w-screen-xl">
         <div className="px-4 py-3 bg-white dark:bg-gray-800 rounded-lg w-full ">
@@ -354,11 +357,11 @@ const IndividualTweetCard = ({
               />
             </Box>
           </Modal>
-          <hr className="mt-3" />
+          {/* <hr className="mt-3" />
           <CreateCommentCard id={id} />
           <hr />
           <span>Comments</span>
-          <hr />
+          <hr /> */}
 
           <>
             {allComments ? (
@@ -382,4 +385,4 @@ const IndividualTweetCard = ({
   );
 };
 
-export default IndividualTweetCard;
+export default IndividualCommentCard;

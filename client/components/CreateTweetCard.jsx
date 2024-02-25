@@ -16,7 +16,6 @@ const CreateTweetCard = ({ handleClose, open }) => {
     <Formik
       initialValues={{ content: '' }}
       onSubmit={(data, { resetForm }) => {
-        console.log(data);
         addTweet(data);
         resetForm();
         open ? handleClose() : '';

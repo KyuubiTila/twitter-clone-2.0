@@ -1,4 +1,11 @@
-import { Controller, Param, Post, Delete, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Param,
+  Post,
+  Delete,
+  UseGuards,
+  Get,
+} from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { CommentRetweetService } from './comment-retweet.service';
 import { User } from 'src/auth/user.entity';
@@ -26,5 +33,11 @@ export class CommentRetweetController {
     @Param('commentId') commentId: number,
   ): Promise<void> {
     await this.commentRetweetService.undoRetweetComment(user, commentId);
+  }
+
+  // GET RETWEETED COMMENTS BY USER
+  @Get('user/:userId')
+  async getRetweetedCommentsByUser(@Param('userId') userId: number) {
+    return await this.commentRetweetService.getRetweetedCommentsByUser(userId);
   }
 }

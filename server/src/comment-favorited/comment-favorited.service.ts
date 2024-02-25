@@ -86,4 +86,29 @@ export class CommentFavoritedService {
       );
     }
   }
+
+  // GET FAVORITED COMMENTS  BY USER
+  async getFavoritedCommentsByUser(
+    userId: number,
+  ): Promise<CommentFavorited[]> {
+    try {
+      const commentFavorited = await this.commentFavoritedRepository.find({
+        where: { userId },
+        relations: [
+          'comment',
+          'user',
+          'user.follower',
+          'comment.comment_favorited',
+          'comment.comment_retweeted',
+          'comment.comment_bookmarked',
+        ],
+      });
+      return commentFavorited;
+    } catch (error) {
+      throw new InternalServerErrorException(
+        'Failed to fetch favorited comments',
+        error.message,
+      );
+    }
+  }
 }

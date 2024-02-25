@@ -1,6 +1,8 @@
 'use client';
 import { useMutation } from 'react-query';
 import axios from 'axios';
+import { useTweet } from './tweet';
+import { useProfile } from './profile';
 
 const doRetweet = async (tweetId) => {
   const accessToken = localStorage.getItem('accessToken');
@@ -113,8 +115,14 @@ const undoBookmark = async (tweetId) => {
 };
 
 export const useEngagement = () => {
+  const { tweetsRefetch } = useTweet();
+  const { retweetedTweetsForProfileRefetch } = useProfile();
   // RETWEET TWEET
   const { mutate: retweet } = useMutation(doRetweet, {
+    onSuccess: () => {
+      tweetsRefetch();
+      retweetedTweetsForProfileRefetch();
+    },
     onError: (error) => {
       console.error('tweet retweet failed:', error);
     },
@@ -122,6 +130,10 @@ export const useEngagement = () => {
 
   // UNDO TWEET RETWEET
   const { mutate: unretweet } = useMutation(undoRetweet, {
+    onSuccess: () => {
+      tweetsRefetch();
+      retweetedTweetsForProfileRefetch();
+    },
     onError: (error) => {
       console.error('tweet unretweet failed:', error);
     },
@@ -129,6 +141,9 @@ export const useEngagement = () => {
 
   //  LIKE TWEET
   const { mutate: like } = useMutation(doLike, {
+    onSuccess: () => {
+      tweetsRefetch();
+    },
     onError: (error) => {
       console.error('tweet like failed:', error);
     },
@@ -136,6 +151,9 @@ export const useEngagement = () => {
 
   //  UNDO TWEET LIKE
   const { mutate: unlike } = useMutation(undoLike, {
+    onSuccess: () => {
+      tweetsRefetch();
+    },
     onError: (error) => {
       console.error('undo tweet like failed:', error);
     },
@@ -143,6 +161,9 @@ export const useEngagement = () => {
 
   //  BOOKMARK TWEET
   const { mutate: bookmark } = useMutation(doBookmark, {
+    onSuccess: () => {
+      tweetsRefetch();
+    },
     onError: (error) => {
       console.error('tweet bookmark failed:', error);
     },
@@ -150,6 +171,9 @@ export const useEngagement = () => {
 
   //  UNDO TWEET BOOKMARK
   const { mutate: unBookmark } = useMutation(undoBookmark, {
+    onSuccess: () => {
+      tweetsRefetch();
+    },
     onError: (error) => {
       console.error('tweet bookmark failed:', error);
     },

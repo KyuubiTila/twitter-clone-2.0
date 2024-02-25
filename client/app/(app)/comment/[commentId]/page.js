@@ -2,22 +2,17 @@
 import React, { useEffect } from 'react'; // Add useEffect import
 import { useAuth } from '@/stores/auth';
 import { useTweet } from '@/stores/tweet';
-import IndividualTweetCard from '../IndividualTweetCard';
 import { useComment } from '@/stores/comment';
+import IndividualCommentCard from '../IndividualCommentCard';
 
-const TweetIdPage = () => {
-  const {
-    tweet,
-    individualTweetRefetch,
-    deleteTweet,
-    updateTweet,
-    tweetIsLoading,
-  } = useTweet();
-
+const CommentPage = () => {
   const {
     allComments,
     isCommentsLoading,
     individualTweetCommentsRefetch,
+    individualComment,
+    isCommentLoading,
+    individualCommentRefetch,
     deleteComment,
     updateComment,
   } = useComment();
@@ -29,30 +24,29 @@ const TweetIdPage = () => {
   }, [userDetailsRefetch]);
 
   useEffect(() => {
-    individualTweetRefetch();
-  }, [individualTweetRefetch]);
+    individualCommentRefetch();
+  }, [individualCommentRefetch]);
 
   useEffect(() => {
     individualTweetCommentsRefetch();
   }, [individualTweetCommentsRefetch]);
+  // console.log(allComments);
 
   return (
     <>
-      {!tweetIsLoading && tweet ? (
-        <IndividualTweetCard
+      {!isCommentLoading && individualComment ? (
+        <IndividualCommentCard
           user={user}
-          tweet={tweet}
-          deleteTweet={deleteTweet}
-          updateTweet={updateTweet}
+          individualComment={individualComment}
           deleteComment={deleteComment}
           updateComment={updateComment}
           allComments={!isCommentsLoading ? allComments : null}
         />
       ) : (
-        <div>Loading</div>
+        <div>Loadingplay</div>
       )}
     </>
   );
 };
 
-export default TweetIdPage;
+export default CommentPage;
