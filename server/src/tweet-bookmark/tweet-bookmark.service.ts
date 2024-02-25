@@ -93,8 +93,9 @@ export class TweetBookmarkService {
         where: { userId },
         relations: [
           'tweet',
-          'user',
-          'user.follower',
+          'tweet.user',
+          'tweet.user.follower',
+          'tweet.user.profile',
           'tweet.tweet_favorited',
           'tweet.tweet_retweeted',
           'tweet.tweet_bookmarked',

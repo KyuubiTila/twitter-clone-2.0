@@ -14,7 +14,6 @@ const OnHoverCard = ({
 }) => {
   const { user, userDetailsRefetch } = useAuth();
   const { follow, unfollow } = useProfile(profileUserId);
-  console.log(profileUserId);
 
   useEffect(() => {
     userDetailsRefetch();

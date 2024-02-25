@@ -3,9 +3,9 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import ProfileHeader from './ProfileHeader';
 import RepliesPage from './[profileId]/replies/RepliesPage';
-import LikesPage from './[profileId]/likes/LikesPage';
 import MediaPage from './[profileId]/media/MediaPage';
 import TweetsProfile from './[profileId]/tweets/page';
+import LikesProfile from './[profileId]/likes/page';
 
 const Profile = ({ profileId, profile }) => {
   const [currentTab, setCurrentTab] = useState('tweets');
@@ -63,10 +63,10 @@ const Profile = ({ profileId, profile }) => {
           </div>
           <div className="w-full">
             {/* <div className="mt-5 w-full flex flex-col items-center overflow-hidden  text-sm"> */}
-            {currentTab === 'tweets' && <TweetsProfile />}{' '}
-            {currentTab === 'replies' && <RepliesPage />}{' '}
-            {currentTab === 'media' && <MediaPage />}{' '}
-            {currentTab === 'likes' && <LikesPage />} {/* </div> */}
+            {currentTab === 'tweets' && <TweetsProfile />}
+            {currentTab === 'replies' && <RepliesPage />}
+            {currentTab === 'media' && <MediaPage />}
+            {currentTab === 'likes' && <LikesProfile />}
           </div>
         </div>
       </div>

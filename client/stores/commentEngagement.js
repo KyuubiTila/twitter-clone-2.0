@@ -1,7 +1,6 @@
 'use client';
 import { useMutation } from 'react-query';
 import axios from 'axios';
-import { useTweet } from './tweet';
 import { useComment } from './comment';
 import { useProfile } from './profile';
 
@@ -17,7 +16,6 @@ const doRetweet = async (commentId) => {
         },
       }
     );
-    return response.data;
   } catch (error) {
     throw new Error(error.response.data.message || 'An error occurred');
   }
@@ -34,7 +32,6 @@ const undoRetweet = async (commentId) => {
         },
       }
     );
-    console.log(response);
     return response.data;
   } catch (error) {
     throw new Error(error.response.data.message || 'An error occurred');
@@ -53,7 +50,6 @@ const doLike = async (commentId) => {
         },
       }
     );
-    console.log(response);
     return response.data;
   } catch (error) {
     throw new Error(error.response.data.message || 'An error occurred');
@@ -71,7 +67,6 @@ const undoLike = async (commentId) => {
         },
       }
     );
-    console.log(response);
     return response.data;
   } catch (error) {
     throw new Error(error.response.data.message || 'An error occurred');
@@ -90,7 +85,6 @@ const doBookmark = async (commentId) => {
         },
       }
     );
-    console.log(response);
     return response.data;
   } catch (error) {
     throw new Error(error.response.data.message || 'An error occurred');
@@ -108,7 +102,6 @@ const undoBookmark = async (commentId) => {
         },
       }
     );
-    console.log(response);
     return response.data;
   } catch (error) {
     throw new Error(error.response.data.message || 'An error occurred');
@@ -117,7 +110,9 @@ const undoBookmark = async (commentId) => {
 
 export const useCommentEngagement = () => {
   const { individualTweetCommentsRefetch } = useComment();
-  const { retweetedCommentsForProfileRefetch } = useProfile();
+  const { retweetedCommentsForProfileRefetch, likedCommentsForProfileRefetch } =
+    useProfile();
+
   // RETWEET COMMENT
   const { mutate: retweet } = useMutation(doRetweet, {
     onSuccess: () => {
@@ -144,6 +139,7 @@ export const useCommentEngagement = () => {
   const { mutate: like } = useMutation(doLike, {
     onSuccess: () => {
       individualTweetCommentsRefetch();
+      likedCommentsForProfileRefetch();
     },
     onError: (error) => {
       console.error('comment like failed:', error);
@@ -154,6 +150,7 @@ export const useCommentEngagement = () => {
   const { mutate: unlike } = useMutation(undoLike, {
     onSuccess: () => {
       individualTweetCommentsRefetch();
+      likedCommentsForProfileRefetch();
     },
     onError: (error) => {
       console.error('undo comment like failed:', error);

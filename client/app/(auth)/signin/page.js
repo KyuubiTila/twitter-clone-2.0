@@ -1,11 +1,15 @@
 'use client';
 import SignIn from '@/components/SignIn';
 import { useAuth } from '@/stores/auth';
-import React from 'react';
+import React, { useEffect } from 'react';
 import * as Yup from 'yup';
 
 const SigninPage = () => {
-  const { login } = useAuth();
+  const { login, logOut } = useAuth();
+
+  useEffect(() => {
+    logOut();
+  }, []);
 
   const validationSchema = Yup.object().shape({
     username: Yup.string().required('You must input a username'),

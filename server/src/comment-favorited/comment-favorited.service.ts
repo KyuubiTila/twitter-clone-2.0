@@ -96,8 +96,9 @@ export class CommentFavoritedService {
         where: { userId },
         relations: [
           'comment',
-          'user',
-          'user.follower',
+          'comment.user',
+          'comment.user.follower',
+          'comment.user.profile',
           'comment.comment_favorited',
           'comment.comment_retweeted',
           'comment.comment_bookmarked',

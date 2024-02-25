@@ -107,7 +107,40 @@ const getretweetedCommentsForProfile = async (userId) => {
         },
       }
     );
-    console.log(response.data);
+    return response.data;
+  } catch (error) {
+    throw new Error(error.response.data.message || 'An error occurred');
+  }
+};
+
+const getLikedTweetsForProfile = async (userId) => {
+  const accessToken = localStorage.getItem('accessToken');
+  try {
+    const response = await axios.get(
+      `http://localhost:3001/tweet-favoriting/user/${userId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    throw new Error(error.response.data.message || 'An error occurred');
+  }
+};
+
+const getLikedCommentsForProfile = async (userId) => {
+  const accessToken = localStorage.getItem('accessToken');
+  try {
+    const response = await axios.get(
+      `http://localhost:3001/comment-favorited/user/${userId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    );
     return response.data;
   } catch (error) {
     throw new Error(error.response.data.message || 'An error occurred');
@@ -191,6 +224,32 @@ export const useProfile = (initialProfileId) => {
     }
   );
 
+  // GET  LIKED TWEETS BY USER
+  const {
+    data: likedTweetsForProfile,
+    isLoading: isLoadingLikedTweetsForProfile,
+    refetch: likedTweetsForProfileRefetch,
+  } = useQuery(
+    ['likedTweetsForProfile', resolvedProfileId],
+    () => getLikedTweetsForProfile(resolvedProfileId),
+    {
+      enabled: !!resolvedProfileId,
+    }
+  );
+
+  // GET  LIKED COMMENT BY USER
+  const {
+    data: likedCommentsForProfile,
+    isLoading: isLoadingLikedCommentsForProfile,
+    refetch: likedCommentsForProfileRefetch,
+  } = useQuery(
+    ['likedCommentsForProfile', resolvedProfileId],
+    () => getLikedCommentsForProfile(resolvedProfileId),
+    {
+      enabled: !!resolvedProfileId,
+    }
+  );
+
   return {
     profile,
     profileDetailsRefetch,
@@ -204,5 +263,11 @@ export const useProfile = (initialProfileId) => {
     retweetedCommentsForProfile,
     isLoadingRetweetedCommentsForProfile,
     retweetedCommentsForProfileRefetch,
+    likedTweetsForProfile,
+    isLoadingLikedTweetsForProfile,
+    likedTweetsForProfileRefetch,
+    likedCommentsForProfile,
+    isLoadingLikedCommentsForProfile,
+    likedCommentsForProfileRefetch,
   };
 };

@@ -33,7 +33,6 @@ const undoRetweet = async (tweetId) => {
         },
       }
     );
-    console.log(response);
     return response.data;
   } catch (error) {
     throw new Error(error.response.data.message || 'An error occurred');
@@ -52,7 +51,6 @@ const doLike = async (tweetId) => {
         },
       }
     );
-    console.log(response);
     return response.data;
   } catch (error) {
     throw new Error(error.response.data.message || 'An error occurred');
@@ -70,7 +68,6 @@ const undoLike = async (tweetId) => {
         },
       }
     );
-    console.log(response);
     return response.data;
   } catch (error) {
     throw new Error(error.response.data.message || 'An error occurred');
@@ -116,7 +113,9 @@ const undoBookmark = async (tweetId) => {
 
 export const useEngagement = () => {
   const { tweetsRefetch } = useTweet();
-  const { retweetedTweetsForProfileRefetch } = useProfile();
+  const { retweetedTweetsForProfileRefetch, likedTweetsForProfileRefetch } =
+    useProfile();
+
   // RETWEET TWEET
   const { mutate: retweet } = useMutation(doRetweet, {
     onSuccess: () => {
@@ -143,6 +142,7 @@ export const useEngagement = () => {
   const { mutate: like } = useMutation(doLike, {
     onSuccess: () => {
       tweetsRefetch();
+      likedTweetsForProfileRefetch();
     },
     onError: (error) => {
       console.error('tweet like failed:', error);
@@ -153,6 +153,7 @@ export const useEngagement = () => {
   const { mutate: unlike } = useMutation(undoLike, {
     onSuccess: () => {
       tweetsRefetch();
+      likedTweetsForProfileRefetch();
     },
     onError: (error) => {
       console.error('undo tweet like failed:', error);
