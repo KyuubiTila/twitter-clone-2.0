@@ -1,20 +1,20 @@
 import React from 'react';
 import ProfileTweetAndCommentCard from '@/components/ProfileTweetAndCommentCard';
 
-const TweetsPage = ({
-  retweetedTweetsForProfile,
-  retweetedCommentsForProfile,
+const BookmarkPage = ({
+  bookmarkedTweetsForProfile,
+  bookmarkedCommentsForProfile,
 }) => {
   return (
     <>
       <div className="w-full">
-        {retweetedTweetsForProfile.map((tweet) => (
+        {bookmarkedTweetsForProfile.map((tweet) => (
           <ProfileTweetAndCommentCard key={tweet.id} tweet={tweet} />
         ))}
       </div>
 
       <div className="w-full">
-        {retweetedCommentsForProfile?.map((tweet) => (
+        {bookmarkedCommentsForProfile?.map((tweet) => (
           <ProfileTweetAndCommentCard key={tweet.id} tweet={tweet} />
         ))}
       </div>
@@ -22,4 +22,4 @@ const TweetsPage = ({
   );
 };
 
-export default TweetsPage;
+export default BookmarkPage;

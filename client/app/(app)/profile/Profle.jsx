@@ -3,9 +3,9 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import ProfileHeader from './ProfileHeader';
 import RepliesPage from './[profileId]/replies/RepliesPage';
-import MediaPage from './[profileId]/media/MediaPage';
 import TweetsProfile from './[profileId]/tweets/page';
 import LikesProfile from './[profileId]/likes/page';
+import BookmarkProfile from './[profileId]/bookmarks/page';
 
 const Profile = ({ profileId, profile }) => {
   const [currentTab, setCurrentTab] = useState('tweets');
@@ -40,14 +40,14 @@ const Profile = ({ profileId, profile }) => {
             </Link>
             <Link
               href={`/profile/${profileId}`}
-              onClick={() => setCurrentTab('media')}
+              onClick={() => setCurrentTab('bookmark')}
               className={`text-gray-500 mx-2 hover:text-gray-900 hover:bg-gray-100 rounded transition duration-150 ease-in font-medium text-sm text-center w-full py-3 ${
-                currentTab === 'media'
+                currentTab === 'bookmark'
                   ? 'bg-gray-100 border-b-2 border-blue-500 dark:text-white dark:border-blue-400'
                   : ''
               }`}
             >
-              Media
+              Bookmarks
             </Link>
             <Link
               href={`/profile/${profileId}`}
@@ -65,7 +65,7 @@ const Profile = ({ profileId, profile }) => {
             {/* <div className="mt-5 w-full flex flex-col items-center overflow-hidden  text-sm"> */}
             {currentTab === 'tweets' && <TweetsProfile />}
             {currentTab === 'replies' && <RepliesPage />}
-            {currentTab === 'media' && <MediaPage />}
+            {currentTab === 'bookmark' && <BookmarkProfile />}
             {currentTab === 'likes' && <LikesProfile />}
           </div>
         </div>

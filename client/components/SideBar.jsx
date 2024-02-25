@@ -44,7 +44,7 @@ const SideBar = ({ user }) => {
     {
       icon: Bookmark,
       label: 'Bookmark',
-      href: '/',
+      href: '/bookmark',
     },
     {
       icon: Clipboard,

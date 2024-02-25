@@ -147,6 +147,40 @@ const getLikedCommentsForProfile = async (userId) => {
   }
 };
 
+const getBookmarkedTweetsForProfile = async (userId) => {
+  const accessToken = localStorage.getItem('accessToken');
+  try {
+    const response = await axios.get(
+      `http://localhost:3001/tweet-bookmarks/user/${userId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    throw new Error(error.response.data.message || 'An error occurred');
+  }
+};
+
+const getBookmarkedCommentsForProfile = async (userId) => {
+  const accessToken = localStorage.getItem('accessToken');
+  try {
+    const response = await axios.get(
+      `http://localhost:3001/comment-bookmark/user/${userId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    throw new Error(error.response.data.message || 'An error occurred');
+  }
+};
+
 export const useProfile = (initialProfileId) => {
   const router = useRouter();
   const { profileId, userId } = useParams();
@@ -250,6 +284,32 @@ export const useProfile = (initialProfileId) => {
     }
   );
 
+  // GET  BOOKMARKED TWEETS BY USER
+  const {
+    data: bookmarkedTweetsForProfile,
+    isLoading: isLoadingBookmarkedTweetsForProfile,
+    refetch: bookmarkedTweetsForProfileRefetch,
+  } = useQuery(
+    ['bookmarkedTweetsForProfile', resolvedProfileId],
+    () => getBookmarkedTweetsForProfile(resolvedProfileId),
+    {
+      enabled: !!resolvedProfileId,
+    }
+  );
+
+  // GET  BOOKMARKED COMMENTS BY USER
+  const {
+    data: bookmarkedCommentsForProfile,
+    isLoading: isLoadingBookmarkedCommentsForProfile,
+    refetch: bookmarkedCommentsForProfileRefetch,
+  } = useQuery(
+    ['bookmarkedCommentsForProfile', resolvedProfileId],
+    () => getBookmarkedCommentsForProfile(resolvedProfileId),
+    {
+      enabled: !!resolvedProfileId,
+    }
+  );
+
   return {
     profile,
     profileDetailsRefetch,
@@ -269,5 +329,11 @@ export const useProfile = (initialProfileId) => {
     likedCommentsForProfile,
     isLoadingLikedCommentsForProfile,
     likedCommentsForProfileRefetch,
+    bookmarkedTweetsForProfile,
+    isLoadingBookmarkedTweetsForProfile,
+    bookmarkedTweetsForProfileRefetch,
+    bookmarkedCommentsForProfile,
+    isLoadingBookmarkedCommentsForProfile,
+    bookmarkedCommentsForProfileRefetch,
   };
 };

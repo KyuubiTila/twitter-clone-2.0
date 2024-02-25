@@ -110,8 +110,11 @@ const undoBookmark = async (commentId) => {
 
 export const useCommentEngagement = () => {
   const { individualTweetCommentsRefetch } = useComment();
-  const { retweetedCommentsForProfileRefetch, likedCommentsForProfileRefetch } =
-    useProfile();
+  const {
+    retweetedCommentsForProfileRefetch,
+    likedCommentsForProfileRefetch,
+    bookmarkedCommentsForProfileRefetch,
+  } = useProfile();
 
   // RETWEET COMMENT
   const { mutate: retweet } = useMutation(doRetweet, {
@@ -161,6 +164,7 @@ export const useCommentEngagement = () => {
   const { mutate: bookmark } = useMutation(doBookmark, {
     onSuccess: () => {
       individualTweetCommentsRefetch();
+      bookmarkedCommentsForProfileRefetch();
     },
     onError: (error) => {
       console.error('comment bookmark failed:', error);
@@ -171,6 +175,7 @@ export const useCommentEngagement = () => {
   const { mutate: unBookmark } = useMutation(undoBookmark, {
     onSuccess: () => {
       individualTweetCommentsRefetch();
+      bookmarkedCommentsForProfileRefetch();
     },
     onError: (error) => {
       console.error('comment bookmark failed:', error);

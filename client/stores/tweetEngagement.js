@@ -86,7 +86,6 @@ const doBookmark = async (tweetId) => {
         },
       }
     );
-    console.log(response);
     return response.data;
   } catch (error) {
     throw new Error(error.response.data.message || 'An error occurred');
@@ -104,7 +103,6 @@ const undoBookmark = async (tweetId) => {
         },
       }
     );
-    console.log(response);
     return response.data;
   } catch (error) {
     throw new Error(error.response.data.message || 'An error occurred');
@@ -113,8 +111,11 @@ const undoBookmark = async (tweetId) => {
 
 export const useEngagement = () => {
   const { tweetsRefetch } = useTweet();
-  const { retweetedTweetsForProfileRefetch, likedTweetsForProfileRefetch } =
-    useProfile();
+  const {
+    retweetedTweetsForProfileRefetch,
+    likedTweetsForProfileRefetch,
+    bookmarkedTweetsForProfileRefetch,
+  } = useProfile();
 
   // RETWEET TWEET
   const { mutate: retweet } = useMutation(doRetweet, {
@@ -164,6 +165,7 @@ export const useEngagement = () => {
   const { mutate: bookmark } = useMutation(doBookmark, {
     onSuccess: () => {
       tweetsRefetch();
+      bookmarkedTweetsForProfileRefetch();
     },
     onError: (error) => {
       console.error('tweet bookmark failed:', error);
@@ -174,6 +176,7 @@ export const useEngagement = () => {
   const { mutate: unBookmark } = useMutation(undoBookmark, {
     onSuccess: () => {
       tweetsRefetch();
+      bookmarkedTweetsForProfileRefetch();
     },
     onError: (error) => {
       console.error('tweet bookmark failed:', error);
