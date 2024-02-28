@@ -17,7 +17,7 @@ const UpdateProfilePage = () => {
   // Define validation schema as a plain object
   const validationSchema = {
     username: Yup.string().required('You must input username'),
-    image: Yup.string().required('You must upload a photo'),
+    image: Yup.string().optional(),
     bio: Yup.string().required('You must input a bio'),
   };
 

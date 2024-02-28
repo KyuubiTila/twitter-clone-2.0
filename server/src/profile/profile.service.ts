@@ -107,7 +107,7 @@ export class ProfileService {
           { userId: profileId },
           {
             bio: updateProfileDto.bio,
-            image: file.filename,
+            image: file?.filename,
           },
         );
         await User.update(
