@@ -5,20 +5,21 @@ const BookmarkPage = ({
   bookmarkedTweetsForProfile,
   bookmarkedCommentsForProfile,
 }) => {
-  return (
-    <>
-      <div className="w-full">
-        {bookmarkedTweetsForProfile.map((tweet) => (
-          <ProfileTweetAndCommentCard key={tweet.id} tweet={tweet} />
-        ))}
-      </div>
+  const allBookmarked = [
+    ...(Array.isArray(bookmarkedCommentsForProfile)
+      ? bookmarkedCommentsForProfile
+      : []),
+    ...bookmarkedTweetsForProfile,
+  ];
 
-      <div className="w-full">
-        {bookmarkedCommentsForProfile?.map((tweet) => (
+  return (
+    <div className="w-full">
+      {[...allBookmarked]
+        .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+        .map((tweet) => (
           <ProfileTweetAndCommentCard key={tweet.id} tweet={tweet} />
         ))}
-      </div>
-    </>
+    </div>
   );
 };
 

@@ -25,18 +25,18 @@ const Profile = ({ profileId, profile }) => {
                   : ''
               }`}
             >
-              Tweets
+              Re-tweeted
             </Link>
             <Link
               href={`/profile/${profileId}`}
-              onClick={() => setCurrentTab('replies')}
+              onClick={() => setCurrentTab('created')}
               className={`text-gray-500 mx-2 hover:text-gray-900 hover:bg-gray-100 rounded transition duration-150 ease-in font-medium text-sm text-center w-full py-3 ${
-                currentTab === 'replies'
+                currentTab === 'created'
                   ? 'bg-gray-100 border-b-2 border-blue-500 dark:text-white dark:border-blue-400'
                   : ''
               }`}
             >
-              Replies
+              Created
             </Link>
             <Link
               href={`/profile/${profileId}`}
@@ -64,7 +64,7 @@ const Profile = ({ profileId, profile }) => {
           <div className="w-full">
             {/* <div className="mt-5 w-full flex flex-col items-center overflow-hidden  text-sm"> */}
             {currentTab === 'tweets' && <TweetsProfile />}
-            {currentTab === 'replies' && <RepliesPage />}
+            {currentTab === 'created' && <RepliesPage />}
             {currentTab === 'bookmark' && <BookmarkProfile />}
             {currentTab === 'likes' && <LikesProfile />}
           </div>

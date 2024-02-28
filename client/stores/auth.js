@@ -73,7 +73,8 @@ export const useAuth = () => {
 
   // REGISTER USER
   const { mutate: addUser } = useMutation(registerUser, {
-    onSuccess: () => {
+    onSuccess: async () => {
+      await userDetailsRefetch();
       router.push('/signin');
     },
     onError: (error) => {
@@ -84,6 +85,7 @@ export const useAuth = () => {
   // LOGIN USER
   const { mutate: login } = useMutation(loginUser, {
     onSuccess: async () => {
+      await userDetailsRefetch();
       router.push('/');
     },
     onError: (error) => {

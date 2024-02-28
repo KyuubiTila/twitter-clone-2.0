@@ -30,7 +30,6 @@ const CommentPage = () => {
   useEffect(() => {
     individualTweetCommentsRefetch();
   }, [individualTweetCommentsRefetch]);
-  // console.log(allComments);
 
   return (
     <>

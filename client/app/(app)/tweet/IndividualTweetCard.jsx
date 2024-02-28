@@ -29,7 +29,6 @@ const IndividualTweetCard = ({
 }) => {
   const { retweet, unretweet, like, unlike, bookmark, unBookmark } =
     useEngagement();
-
   const {
     anchorEl,
     commentModalOpen,
@@ -362,14 +361,16 @@ const IndividualTweetCard = ({
 
           <>
             {allComments ? (
-              allComments.map((comment) => (
-                <CommentCard
-                  key={comment.id}
-                  comment={comment}
-                  deleteComment={deleteComment}
-                  updateComment={updateComment}
-                />
-              ))
+              [...allComments]
+                .sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt))
+                .map((comment) => (
+                  <CommentCard
+                    key={comment.id}
+                    comment={comment}
+                    deleteComment={deleteComment}
+                    updateComment={updateComment}
+                  />
+                ))
             ) : (
               <div>Loading</div>
             )}
