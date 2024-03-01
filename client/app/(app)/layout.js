@@ -29,8 +29,6 @@ export default function AppLayout({ children }) {
     profileSideBarDetailsRefetch();
   }, [profileSideBarDetailsRefetch]);
 
-  console.log(profile?.user.username);
-
   return (
     <div className="flex flex-col md:flex-row max-w-7xl mx-auto min-h-screen">
       {/* Sidebar */}

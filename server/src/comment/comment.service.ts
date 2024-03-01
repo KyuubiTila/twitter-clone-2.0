@@ -104,7 +104,6 @@ export class CommentService {
   async deleteComment(user: User, commentId: number): Promise<boolean> {
     try {
       const commentToDelete = await this.returnCommentUserId(commentId);
-      console.log(commentToDelete);
 
       if (commentToDelete.userId !== user.id) {
         throw new UnauthorizedException(

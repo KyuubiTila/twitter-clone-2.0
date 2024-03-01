@@ -15,7 +15,6 @@ const createComment = async ({ content, articleId }) => {
         },
       }
     );
-    console.log(response.data);
     return response.data;
   } catch (error) {
     throw new Error(error.response.data.message || 'An error occurred');
@@ -57,8 +56,6 @@ const getIndividualComment = async (commentId) => {
 };
 
 const deleteIndividualComment = async (commentId) => {
-  console.log(commentId);
-
   const accessToken = localStorage.getItem('accessToken');
   try {
     const response = await axios.delete(
@@ -69,7 +66,6 @@ const deleteIndividualComment = async (commentId) => {
         },
       }
     );
-    console.log(response);
     return response.data;
   } catch (error) {
     throw new Error(error.response?.data?.message || 'An error occurred');
@@ -88,7 +84,6 @@ const updateIndividualComment = async ({ content, commentId }) => {
         },
       }
     );
-    console.log(response);
     return response.data;
   } catch (error) {
     throw new Error(error.response.data.message || 'An error occurred');

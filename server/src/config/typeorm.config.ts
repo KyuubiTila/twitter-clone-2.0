@@ -3,8 +3,6 @@ import * as config from 'config';
 
 const dbConfig = config.get('db');
 
-console.log(__dirname);
-
 export const typeOrmConfig: DataSourceOptions = {
   type: dbConfig.type,
   host: process.env.RDS_HOSTNAME || dbConfig.host,

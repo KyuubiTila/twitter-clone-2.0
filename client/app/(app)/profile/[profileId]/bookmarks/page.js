@@ -3,7 +3,7 @@ import React, { useEffect } from 'react';
 import { useProfile } from '@/stores/profile';
 import BookmarkPage from './BookmarkPage';
 
-const BookmarkProfile = () => {
+const BookmarkProfile = ({ profile }) => {
   const {
     bookmarkedTweetsForProfile,
     isLoadingBookmarkedTweetsForProfile,
@@ -22,6 +22,7 @@ const BookmarkProfile = () => {
     <BookmarkPage
       bookmarkedTweetsForProfile={bookmarkedTweetsForProfile}
       bookmarkedCommentsForProfile={bookmarkedCommentsForProfile}
+      profile={profile}
     />
   ) : (
     <p>Loading......</p>

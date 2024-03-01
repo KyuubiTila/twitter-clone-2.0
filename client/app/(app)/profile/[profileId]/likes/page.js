@@ -3,7 +3,7 @@ import React, { useEffect } from 'react';
 import LikesPage from './LikesPage';
 import { useProfile } from '@/stores/profile';
 
-const LikesProfile = () => {
+const LikesProfile = ({ profile }) => {
   const {
     likedTweetsForProfile,
     isLoadingLikedTweetsForProfile,
@@ -22,6 +22,7 @@ const LikesProfile = () => {
     <LikesPage
       likedTweetsForProfile={likedTweetsForProfile}
       likedCommentsForProfile={likedCommentsForProfile}
+      profile={profile}
     />
   ) : (
     <p>Loading......</p>

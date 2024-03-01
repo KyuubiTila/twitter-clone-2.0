@@ -55,7 +55,6 @@ export class ProfileController {
     @Body() updateProfileDto: UpdateProfileDto,
     @UploadedFile() file: Express.Multer.File,
   ): Promise<boolean> {
-    console.log(file);
     return await this.profileService.updateProfile(
       user,
       profileId,

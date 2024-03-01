@@ -60,7 +60,6 @@ const IndividualCommentCard = ({
     userId: profileUserId,
   } = individualComment?.user?.profile;
   const { username, follower } = individualComment?.user || {};
-  // console.log(individualComment);
   const [tweetText, setTweetText] = useState(content);
 
   const retweetsIds = comment_retweeted?.map((retweet) => retweet.userId);

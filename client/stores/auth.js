@@ -10,7 +10,6 @@ const registerUser = async (data) => {
       'http://localhost:3001/auth/signup',
       data
     );
-    console.log(response);
     return response.data;
   } catch (error) {
     throw new Error(error.response.data.message || 'An error occurred');

@@ -2,6 +2,7 @@
 import React, { useEffect } from 'react';
 import TweetCard from './TweetRenderCard';
 import { useTweet } from '@/stores/tweet';
+import CardLoading from './CardLoading';
 
 const Post = () => {
   const { tweets, tweetsRefetch, tweetsIsLoading, deleteTweet, updateTweet } =
@@ -25,7 +26,13 @@ const Post = () => {
             />
           ))
       ) : (
-        <div>Loading</div>
+        <div>
+          <CardLoading />
+          <CardLoading />
+          <CardLoading />
+          <CardLoading />
+          <CardLoading />
+        </div>
       )}
     </>
   );

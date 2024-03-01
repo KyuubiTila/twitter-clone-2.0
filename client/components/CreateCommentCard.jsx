@@ -23,8 +23,6 @@ const CreateCommentCard = ({
       initialValues={{ content: '' }}
       onSubmit={(data, { resetForm }) => {
         resetForm();
-        console.log(data.content);
-        console.log(id);
         addComment({ content: data.content, articleId: id });
         commentModalOpen ? handleCloseCommentModal() : '';
       }}

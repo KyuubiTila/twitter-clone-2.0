@@ -4,6 +4,7 @@ import ProfileTweetAndCommentCard from '@/components/ProfileTweetAndCommentCard'
 const BookmarkPage = ({
   bookmarkedTweetsForProfile,
   bookmarkedCommentsForProfile,
+  profile,
 }) => {
   const allBookmarked = [
     ...(Array.isArray(bookmarkedCommentsForProfile)
@@ -11,14 +12,25 @@ const BookmarkPage = ({
       : []),
     ...bookmarkedTweetsForProfile,
   ];
+  const { username } = profile.user;
 
   return (
-    <div className="w-full">
-      {[...allBookmarked]
-        .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
-        .map((tweet) => (
-          <ProfileTweetAndCommentCard key={tweet.id} tweet={tweet} />
-        ))}
+    <div>
+      {allBookmarked.length > 0 ? (
+        <div className="w-full">
+          {[...allBookmarked]
+            .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+            .map((tweet) => (
+              <ProfileTweetAndCommentCard key={tweet.id} tweet={tweet} />
+            ))}
+        </div>
+      ) : (
+        <div className="text-sm text-center mb-4">
+          {username} has not bookmarked any Tweets
+          <br />
+          When they do, those Tweets will show up here.
+        </div>
+      )}
     </div>
   );
 };

@@ -3,7 +3,7 @@ import React, { useEffect } from 'react';
 import TweetsPage from './TweetsPage';
 import { useProfile } from '@/stores/profile';
 
-const TweetsProfile = () => {
+const TweetsProfile = ({ profile }) => {
   const {
     retweetedTweetsForProfile,
     isLoadingretweetedTweetsForProfile,
@@ -22,6 +22,7 @@ const TweetsProfile = () => {
     <TweetsPage
       retweetedTweetsForProfile={retweetedTweetsForProfile}
       retweetedCommentsForProfile={retweetedCommentsForProfile}
+      profile={profile}
     />
   ) : (
     <p>Loading......</p>

@@ -63,10 +63,10 @@ const Profile = ({ profileId, profile }) => {
           </div>
           <div className="w-full">
             {/* <div className="mt-5 w-full flex flex-col items-center overflow-hidden  text-sm"> */}
-            {currentTab === 'tweets' && <TweetsProfile />}
+            {currentTab === 'tweets' && <TweetsProfile profile={profile} />}
             {currentTab === 'created' && <RepliesPage />}
-            {currentTab === 'likes' && <LikesProfile />}
-            {currentTab === 'bookmark' && <BookmarkProfile />}
+            {currentTab === 'likes' && <LikesProfile profile={profile} />}
+            {currentTab === 'bookmark' && <BookmarkProfile profile={profile} />}
           </div>
         </div>
       </div>

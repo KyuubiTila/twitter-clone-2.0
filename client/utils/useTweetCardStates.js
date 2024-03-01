@@ -16,7 +16,6 @@ const useTweetCardStates = () => {
   };
 
   const handleClickMenu = (event) => {
-    console.log(event);
     setAnchorEl(event.currentTarget);
   };
 
