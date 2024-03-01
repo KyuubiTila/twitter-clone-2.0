@@ -22,7 +22,7 @@ const LikesPage = ({
             ))}
         </div>
       ) : (
-        <div className="text-sm text-center mb-4">
+        <div className="text-sm text-center my-5">
           {username} has not liked any Tweets
           <br />
           When they do, those Tweets will show up here.
