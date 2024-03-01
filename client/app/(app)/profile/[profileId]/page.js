@@ -12,7 +12,7 @@ const ProfilePage = ({ params }) => {
 
   return (
     <>
-      {isLoading ? ( // Conditionally render based on loading state
+      {isLoading ? (
         <p>Loading...</p>
       ) : (
         <Profile profileId={params.profileId} profile={profile} />

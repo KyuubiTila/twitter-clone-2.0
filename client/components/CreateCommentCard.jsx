@@ -4,15 +4,18 @@ import { Formik, Field, Form, ErrorMessage } from 'formik';
 import { Image as ImageIcon, SendHorizonal, SmilePlus } from 'lucide-react';
 import * as Yup from 'yup';
 import { useComment } from '@/stores/comment';
+import Link from 'next/link';
 
 const CreateCommentCard = ({
   commentModalOpen,
   handleCloseCommentModal,
   id,
+  userId,
+  username,
 }) => {
   const { addComment } = useComment();
   const validationSchema = Yup.object().shape({
-    content: Yup.string().required('You must input a tweet'),
+    content: Yup.string().required('You must input a comment'),
   });
 
   return (
@@ -29,6 +32,14 @@ const CreateCommentCard = ({
     >
       {({ errors, touched }) => (
         <Form>
+          <hr className="mt-3" />
+          <span className="text-sm ml-4 ">
+            Replying to{' '}
+            <Link href={`/profile/${userId}`} className="text-blue-700">
+              {username}
+            </Link>
+          </span>
+
           <div
             className={`flex items-center px-3 py-2 my-2 rounded-lg bg-gray-50 dark:bg-gray-700 ${
               errors.content && touched.content
@@ -43,6 +54,7 @@ const CreateCommentCard = ({
               <ImageIcon />
               <span className="sr-only">Upload image</span>
             </button>
+
             <button
               type="button"
               className="p-2 text-gray-500 rounded-lg cursor-pointer hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-600"
@@ -50,6 +62,7 @@ const CreateCommentCard = ({
               <SmilePlus />
               <span className="sr-only">Add emoji</span>
             </button>
+
             <Field
               as="textarea"
               name="content"
@@ -67,6 +80,7 @@ const CreateCommentCard = ({
               <SendHorizonal />
             </button>
           </div>
+          <hr />
         </Form>
       )}
     </Formik>

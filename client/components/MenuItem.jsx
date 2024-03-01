@@ -1,19 +1,19 @@
 'use client';
-import { usePathname } from 'next/navigation';
 import { useRouter } from 'next/navigation';
 
 const MenuItem = ({ icon: Icon, label, href }) => {
-  const pathname = usePathname();
   const router = useRouter();
 
   const handleClick = () => {
-    router.push(href);
+    href === 'disabled' ? '' : router.push(href);
   };
 
   return (
     <div
       onClick={handleClick}
-      className={`font-bold text-xl mt-1 flex gap-5 text-black w-full items-center px-4  hover:bg-blue-200 hover:text-white hover:p-3 p-3 rounded-full cursor-pointer`}
+      className={` ${
+        href === 'disabled' ? 'cursor-not-allowed' : ''
+      } font-bold text-xl mt-1 flex gap-5 text-black w-full items-center px-4  hover:bg-blue-200 hover:text-white  p-3 rounded-full cursor-pointer`}
     >
       <Icon className="w-15 h-8" />
       <p className="hidden md:inline-flex">{label}</p>

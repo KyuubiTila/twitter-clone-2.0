@@ -12,7 +12,6 @@ const UpdateProfile = ({ validationSchema, initialValues, patchProfile }) => {
         <Formik
           initialValues={initialValues}
           onSubmit={(data, params) => {
-            console.log(data);
             patchProfile(data);
             params.resetForm();
             setImageSrc(null);

@@ -2,6 +2,7 @@
 import { useMutation, useQuery } from 'react-query';
 import axios from 'axios';
 import { useParams, useRouter } from 'next/navigation';
+import { useSideBarProfile } from '@/utils/useSideBarUserDetails';
 
 const updateProfile = async ({ data, profileId }) => {
   const accessToken = localStorage.getItem('accessToken');
@@ -185,12 +186,14 @@ export const useProfile = (initialProfileId) => {
   const router = useRouter();
   const { profileId, userId } = useParams();
   const resolvedProfileId = profileId || userId || initialProfileId;
+  const { profileSideBarDetailsRefetch } = useSideBarProfile();
 
   // UPDATE PROFILE
   const { mutate: patchProfile } = useMutation(
     (data) => updateProfile({ data, profileId: resolvedProfileId }),
     {
       onSuccess: () => {
+        profileSideBarDetailsRefetch();
         router.push(`/profile/${resolvedProfileId}`);
       },
       onError: (error) => {

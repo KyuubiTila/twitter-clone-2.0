@@ -1,3 +1,4 @@
+'use client';
 import React from 'react';
 import {
   Bell,
@@ -18,8 +19,10 @@ import CreateTweetCard from './CreateTweetCard';
 import { Box, Modal, MenuItem as MuiMenuItems, Popover } from '@mui/material';
 import useSideBarState from '@/utils/useSideBarState';
 
-const SideBar = ({ user }) => {
-  const { username, id } = user;
+const SideBar = ({ user, profile }) => {
+  const { id } = user;
+
+  const { username } = profile?.user || {};
   const menuItems = [
     {
       icon: CottageOutlinedIcon,
@@ -29,17 +32,17 @@ const SideBar = ({ user }) => {
     {
       icon: Search,
       label: 'Explore',
-      href: '/',
+      href: 'disabled',
     },
     {
       icon: Bell,
       label: 'Notification',
-      href: '/',
+      href: 'disabled',
     },
     {
       icon: MarkunreadOutlinedIcon,
       label: 'Messages',
-      href: '/',
+      href: 'disabled',
     },
     {
       icon: Bookmark,
@@ -49,7 +52,7 @@ const SideBar = ({ user }) => {
     {
       icon: Clipboard,
       label: 'Lists',
-      href: '/',
+      href: 'disabled',
     },
     {
       icon: UserIcon,
@@ -59,7 +62,7 @@ const SideBar = ({ user }) => {
     {
       icon: MoreHorizontal,
       label: 'More',
-      href: '/',
+      href: 'disabled',
     },
   ];
   const {
@@ -95,7 +98,7 @@ const SideBar = ({ user }) => {
 
         <div
           onClick={handleOpen}
-          className="bg-blue-200 mt-2 hover:bg-blue-600 hover:cursor-pointer flex justify-center text-black hover:text-white font-bold py-2 px-2 focus:outline-none rounded-full focus:shadow-outline md:py-3 md:px-6 md:text-lg lg:text-xl"
+          className="flex bg-blue-200 mt-2 hover:bg-blue-600 hover:cursor-pointer justify-center text-black  hover:text-white font-bold py-2 px-1 focus:outline-none rounded-full focus:shadow-outline md:py-3 md:px-6 md:text-lg lg:text-xl"
         >
           <button>Tweet</button>
         </div>
@@ -106,10 +109,10 @@ const SideBar = ({ user }) => {
         className="flex justify-between mt-10 items-center px-2.5 mb-4 hover:bg-blue-200 p-2 rounded-full cursor-pointer relative"
       >
         <div className="flex">
-          <div>
-            <Avatar src="/x-big.jpg" alt="Avatar" width={10} height={10} />
+          <div className="w-1 h-10">
+            <Avatar src="/x-big.jpg" alt="Avatar" />
           </div>
-          <div className="text-black mt-2 md:flex md:flex-col hover:text-white ml-2 hidden">
+          <div className="text-black mt-2 md:flex md:flex-col hover:text-white ml-12 hidden">
             <p className="font-semibold">{username}</p>
           </div>
         </div>

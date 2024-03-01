@@ -343,6 +343,8 @@ const CommentCard = ({ comment, deleteComment, updateComment }) => {
               deleteComment={deleteComment}
               updateComment={updateComment}
               id={id}
+              userId={userId}
+              username={username}
             />
           </Box>
         </Modal>

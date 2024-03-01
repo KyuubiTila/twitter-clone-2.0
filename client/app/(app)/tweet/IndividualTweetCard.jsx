@@ -350,11 +350,12 @@ const IndividualTweetCard = ({
                 commentModalOpen={commentModalOpen}
                 handleCloseCommentModal={handleCloseCommentModal}
                 id={id}
+                userId={userId}
+                username={username}
               />
             </Box>
           </Modal>
-          <hr className="mt-3" />
-          <CreateCommentCard id={id} />
+          <CreateCommentCard id={id} userId={userId} username={username} />
           <hr />
           <span>Comments</span>
           <hr />

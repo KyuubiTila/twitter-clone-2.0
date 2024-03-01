@@ -40,17 +40,6 @@ const Profile = ({ profileId, profile }) => {
             </Link>
             <Link
               href={`/profile/${profileId}`}
-              onClick={() => setCurrentTab('bookmark')}
-              className={`text-gray-500 mx-2 hover:text-gray-900 hover:bg-gray-100 rounded transition duration-150 ease-in font-medium text-sm text-center w-full py-3 ${
-                currentTab === 'bookmark'
-                  ? 'bg-gray-100 border-b-2 border-blue-500 dark:text-white dark:border-blue-400'
-                  : ''
-              }`}
-            >
-              Bookmarks
-            </Link>
-            <Link
-              href={`/profile/${profileId}`}
               onClick={() => setCurrentTab('likes')}
               className={`text-gray-500 mx-2 hover:text-gray-900 hover:bg-gray-100 rounded transition duration-150 ease-in font-medium text-sm text-center w-full py-3 ${
                 currentTab === 'likes'
@@ -60,13 +49,24 @@ const Profile = ({ profileId, profile }) => {
             >
               Likes
             </Link>
+            <Link
+              href={`/profile/${profileId}`}
+              onClick={() => setCurrentTab('bookmark')}
+              className={`text-gray-500 mx-2 hover:text-gray-900 hover:bg-gray-100 rounded transition duration-150 ease-in font-medium text-sm text-center w-full py-3 ${
+                currentTab === 'bookmark'
+                  ? 'bg-gray-100 border-b-2 border-blue-500 dark:text-white dark:border-blue-400'
+                  : ''
+              }`}
+            >
+              Bookmarks
+            </Link>
           </div>
           <div className="w-full">
             {/* <div className="mt-5 w-full flex flex-col items-center overflow-hidden  text-sm"> */}
             {currentTab === 'tweets' && <TweetsProfile />}
             {currentTab === 'created' && <RepliesPage />}
-            {currentTab === 'bookmark' && <BookmarkProfile />}
             {currentTab === 'likes' && <LikesProfile />}
+            {currentTab === 'bookmark' && <BookmarkProfile />}
           </div>
         </div>
       </div>

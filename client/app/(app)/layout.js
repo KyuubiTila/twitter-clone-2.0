@@ -5,12 +5,13 @@ import { useAuth } from '@/stores/auth';
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import NoSSR from 'react-no-ssr';
+import { useSideBarProfile } from '@/utils/useSideBarUserDetails';
 
 export default function AppLayout({ children }) {
   const router = useRouter();
 
   const { user, userDetailsRefetch, loggedIn } = useAuth();
-
+  // const { id } = user;
   useEffect(() => {
     userDetailsRefetch();
   }, [userDetailsRefetch]);
@@ -21,12 +22,21 @@ export default function AppLayout({ children }) {
     }
   }, [loggedIn, router]);
 
+  const { profile, isLoading, profileSideBarDetailsRefetch } =
+    useSideBarProfile();
+
+  useEffect(() => {
+    profileSideBarDetailsRefetch();
+  }, [profileSideBarDetailsRefetch]);
+
+  console.log(profile?.user.username);
+
   return (
     <div className="flex flex-col md:flex-row max-w-7xl mx-auto min-h-screen">
       {/* Sidebar */}
       <NoSSR>
         <div className="w-16 md:w-60 fixed h-full ">
-          <SideBar user={user} />
+          {!isLoading && <SideBar user={user} profile={profile} />}
         </div>
       </NoSSR>
 

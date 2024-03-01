@@ -260,7 +260,10 @@ const TweetCard = ({ tweet, deleteTweet, updateTweet }) => {
             </button>
           </div>
           <div className="flex">
-            <button className="ml-1 text-gray-500 dark:text-gray-400 font-light ">
+            <button
+              className="ml-1 text-gray-500 dark:text-gray-400 font-light "
+              title={isRetweet ? 'Undo-retweet' : 'Retweet'}
+            >
               {isRetweet ? (
                 <Repeat
                   color="red"
@@ -275,7 +278,10 @@ const TweetCard = ({ tweet, deleteTweet, updateTweet }) => {
             <div className="ml-1">{retweetCount}</div>
           </div>
           <div className="flex">
-            <button className="ml-1 text-gray-500 dark:text-gray-400 font-light ">
+            <button
+              className="ml-1 text-gray-500 dark:text-gray-400 font-light"
+              title={isLiked ? 'Unlike' : 'Like'}
+            >
               {isLiked ? (
                 <Heart
                   color="red"
@@ -291,7 +297,10 @@ const TweetCard = ({ tweet, deleteTweet, updateTweet }) => {
           </div>
 
           <div className=" flex">
-            <button className=" ml-1 text-gray-500 dark:text-gray-400 font-light ">
+            <button
+              className=" ml-1 text-gray-500 dark:text-gray-400 font-light "
+              title={isBookmark ? 'Undo-bookmark' : 'Bookmark'}
+            >
               {isBookmark ? (
                 <BookmarkCheck
                   color="red"
@@ -342,6 +351,8 @@ const TweetCard = ({ tweet, deleteTweet, updateTweet }) => {
               commentModalOpen={commentModalOpen}
               handleCloseCommentModal={handleCloseCommentModal}
               id={id}
+              userId={userId}
+              username={username}
             />
           </Box>
         </Modal>

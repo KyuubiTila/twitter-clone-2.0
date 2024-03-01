@@ -14,7 +14,6 @@ const ProfileHeader = ({ profileId, profile }) => {
   );
   const followerIds = follower?.map((follower) => follower.followerId);
   const [state, setState] = useState(followerIds.includes(user.id));
-
   useEffect(() => {
     userDetailsRefetch();
   }, [userDetailsRefetch]);

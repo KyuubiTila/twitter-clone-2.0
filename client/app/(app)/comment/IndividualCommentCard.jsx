@@ -354,15 +354,11 @@ const IndividualCommentCard = ({
                 commentModalOpen={commentModalOpen}
                 handleCloseCommentModal={handleCloseCommentModal}
                 id={id}
+                userId={userId}
+                username={username}
               />
             </Box>
           </Modal>
-          {/* <hr className="mt-3" />
-          <CreateCommentCard id={id} />
-          <hr />
-          <span>Comments</span>
-          <hr /> */}
-
           <>
             {allComments ? (
               allComments.map((comment) => (
