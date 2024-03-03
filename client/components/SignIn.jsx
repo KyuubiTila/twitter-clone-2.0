@@ -1,8 +1,12 @@
-import Link from 'next/link';
+import { useState } from 'react';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
+import Link from 'next/link';
 import React from 'react';
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 
 const SignIn = ({ validationSchema, initialValues, loginUser }) => {
+  const [showPassword, setShowPassword] = useState(false);
   const activeRoute = 'signin';
 
   return (
@@ -57,7 +61,6 @@ const SignIn = ({ validationSchema, initialValues, loginUser }) => {
                   />
                 </svg>
               </span>
-
               <Field
                 type="text"
                 name="username"
@@ -89,14 +92,19 @@ const SignIn = ({ validationSchema, initialValues, loginUser }) => {
                   />
                 </svg>
               </span>
-
               <Field
-                type="password"
+                type={showPassword ? 'text' : 'password'}
                 name="password"
-                className="block w-full px-10 py-3 text-gray-700 bg-white border rounded-lg dark:bg-gray-900 dark:text-gray-300 dark:border-gray-600 focus:border-blue-400 dark:focus:border-blue-300 focus:ring-blue-300 focus:outline-none focus:ring focus:ring-opacity-40"
+                className="block w-full px-10 py-3 text-gray-700 bg-white border rounded-lg dark:bg-gray-900 dark:text-gray-300 dark:border-gray-600 focus:border-blue-400 dark:focus:border-blue-300 focus:ring-blue-300 focus:outline-none focus:ring focus:ring-opacity-40 pl-14"
                 placeholder="Password"
                 autoComplete="off"
               />
+              <span
+                className="cursor-pointer flex justify-end absolute right-4 top-4"
+                onClick={() => setShowPassword(!showPassword)}
+              >
+                {showPassword ? <VisibilityIcon /> : <VisibilityOffIcon />}
+              </span>
             </div>
             <ErrorMessage
               name="password"

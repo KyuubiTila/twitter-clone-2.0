@@ -8,8 +8,6 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   Column,
-  JoinColumn,
-  JoinTable,
 } from 'typeorm';
 import { Tweet } from 'src/tweet/tweet.entity';
 import { Comment } from 'src/comment/comment.entity';
