@@ -73,6 +73,26 @@ export class CommentService {
     }
   }
 
+  // GET ALL COMMENTS CREATED BY USER
+  async getAllCommentsCreatedByUser(userId: number): Promise<Comment[]> {
+    try {
+      return await this.commentRepository.find({
+        where: { userId },
+        relations: [
+          'user',
+          'comment_favorited',
+          'comment_retweeted',
+          'comment_bookmarked',
+        ],
+      });
+    } catch (error) {
+      throw new InternalServerErrorException(
+        `Failed to retrieve all comments created by user ${userId}`,
+        error.message,
+      );
+    }
+  }
+
   // UPDATE COMMENT
   async updateComment(
     user: User,

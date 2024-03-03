@@ -1,24 +1,26 @@
 import React from 'react';
-import ProfileTweetAndCommentCard from '@/components/ProfileTweetAndCommentCard';
+import ProfileCreatedCard from '@/components/ProfileCreatedCard';
 
-const LikesPage = ({
-  likedTweetsForProfile,
-  likedCommentsForProfile,
+const CreatedPage = ({
+  createdTweetForProfile,
+  createdCommentForProfile,
   profile,
 }) => {
-  const allLikes = [
-    ...(Array.isArray(likedCommentsForProfile) ? likedCommentsForProfile : []),
-    ...likedTweetsForProfile,
+  const allCreated = [
+    ...(Array.isArray(createdCommentForProfile)
+      ? createdCommentForProfile
+      : []),
+    ...createdTweetForProfile,
   ];
   const { username } = profile.user;
   return (
     <div>
-      {allLikes.length > 0 ? (
+      {allCreated.length > 0 ? (
         <div className="w-full">
-          {[...allLikes]
+          {[...allCreated]
             .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
             .map((tweet) => (
-              <ProfileTweetAndCommentCard key={tweet.updatedAt} tweet={tweet} />
+              <ProfileCreatedCard key={tweet.updatedAt} tweet={tweet} />
             ))}
         </div>
       ) : (
@@ -32,4 +34,4 @@ const LikesPage = ({
   );
 };
 
-export default LikesPage;
+export default CreatedPage;

@@ -2,6 +2,7 @@
 import { useMutation, useQuery } from 'react-query';
 import axios from 'axios';
 import { useParams, useRouter } from 'next/navigation';
+import { useProfile } from './profile';
 
 const createTweet = async (data) => {
   const accessToken = localStorage.getItem('accessToken');
@@ -86,12 +87,13 @@ const updateIndividualTweet = async ({ content, tweetId }) => {
 export const useTweet = () => {
   const router = useRouter();
   const { tweetId } = useParams();
+  const { createdTweetForProfileRefetch } = useProfile();
 
   // CREATE TWEET
   const { mutate: addTweet } = useMutation(createTweet, {
     onSuccess: () => {
       tweetsRefetch();
-      router.push(`/`);
+      createdTweetForProfileRefetch();
     },
     onError: (error) => {
       console.error('tweet creation failed:', error);
@@ -124,7 +126,7 @@ export const useTweet = () => {
   const { mutate: deleteTweet } = useMutation(deleteIndividualTweet, {
     onSuccess: () => {
       tweetsRefetch();
-      router.push(`/`);
+      createdTweetForProfileRefetch();
     },
     onError: (error) => {
       console.error('tweet delete failed:', error);
@@ -133,9 +135,6 @@ export const useTweet = () => {
 
   // UPDATE INDIVIDUAL'S PERSONAL TWEET
   const { mutate: updateTweet } = useMutation(updateIndividualTweet, {
-    onSuccess: () => {
-      tweetsRefetch();
-    },
     onError: (error) => {
       console.error('tweet delete failed:', error);
     },

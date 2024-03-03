@@ -177,9 +177,9 @@ const ProfileHeader = ({ profileId, profile }) => {
           </div>
           <div className="lg:mr-2 p-1 text-center">
             <span className="text-xs font-bold block uppercase tracking-wide text-blueGray-600">
-              89
+              0
             </span>
-            <span className="text-xs text-blueGray-400">Comments</span>
+            <span className="text-xs text-blueGray-400">Tweets</span>
           </div>
         </div>
 

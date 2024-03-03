@@ -13,7 +13,6 @@ const TweetsPage = ({
     ...retweetedTweetsForProfile,
   ];
   const { username } = profile.user;
-
   return (
     <div>
       {allRetweeted.length > 0 ? (
@@ -21,7 +20,7 @@ const TweetsPage = ({
           {[...allRetweeted]
             .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
             .map((tweet) => (
-              <ProfileTweetAndCommentCard key={tweet.id} tweet={tweet} />
+              <ProfileTweetAndCommentCard key={tweet.createdAt} tweet={tweet} />
             ))}
         </div>
       ) : (

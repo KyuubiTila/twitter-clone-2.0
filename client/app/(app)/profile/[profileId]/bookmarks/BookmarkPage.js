@@ -21,7 +21,7 @@ const BookmarkPage = ({
           {[...allBookmarked]
             .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
             .map((tweet) => (
-              <ProfileTweetAndCommentCard key={tweet.id} tweet={tweet} />
+              <ProfileTweetAndCommentCard key={tweet.updatedAt} tweet={tweet} />
             ))}
         </div>
       ) : (

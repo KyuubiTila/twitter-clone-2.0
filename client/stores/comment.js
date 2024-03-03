@@ -2,6 +2,7 @@
 import { useMutation, useQuery } from 'react-query';
 import axios from 'axios';
 import { useParams } from 'next/navigation';
+import { useProfile } from './profile';
 
 const createComment = async ({ content, articleId }) => {
   const accessToken = localStorage.getItem('accessToken');
@@ -93,6 +94,7 @@ const updateIndividualComment = async ({ content, commentId }) => {
 export const useComment = () => {
   const { tweetId } = useParams();
   const { commentId } = useParams();
+  const { createdCommentForProfileRefetch } = useProfile();
 
   // CREATE COMMENT
   const { mutate: addComment } = useMutation(createComment, {
@@ -133,6 +135,7 @@ export const useComment = () => {
   const { mutate: deleteComment } = useMutation(deleteIndividualComment, {
     onSuccess: () => {
       individualTweetCommentsRefetch();
+      createdCommentForProfileRefetch();
     },
     onError: (error) => {
       console.error('comment delete failed:', error);
@@ -141,10 +144,6 @@ export const useComment = () => {
 
   // UPDATE INDIVIDUAL'S  COMMENT
   const { mutate: updateComment } = useMutation(updateIndividualComment, {
-    onSuccess: () => {
-      individualCommentRefetch();
-      individualTweetCommentsRefetch();
-    },
     onError: (error) => {
       console.error('comment update failed:', error);
     },

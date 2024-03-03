@@ -2,10 +2,10 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import ProfileHeader from './ProfileHeader';
-import RepliesPage from './[profileId]/replies/RepliesPage';
 import TweetsProfile from './[profileId]/tweets/page';
 import LikesProfile from './[profileId]/likes/page';
 import BookmarkProfile from './[profileId]/bookmarks/page';
+import CreatedProfile from './[profileId]/created/page';
 
 const Profile = ({ profileId, profile }) => {
   const [currentTab, setCurrentTab] = useState('tweets');
@@ -64,7 +64,7 @@ const Profile = ({ profileId, profile }) => {
           <div className="w-full">
             {/* <div className="mt-5 w-full flex flex-col items-center overflow-hidden  text-sm"> */}
             {currentTab === 'tweets' && <TweetsProfile profile={profile} />}
-            {currentTab === 'created' && <RepliesPage />}
+            {currentTab === 'created' && <CreatedProfile profile={profile} />}
             {currentTab === 'likes' && <LikesProfile profile={profile} />}
             {currentTab === 'bookmark' && <BookmarkProfile profile={profile} />}
           </div>

@@ -182,6 +182,40 @@ const getBookmarkedCommentsForProfile = async (userId) => {
   }
 };
 
+const getCreatedTweetForProfile = async (userId) => {
+  const accessToken = localStorage.getItem('accessToken');
+  try {
+    const response = await axios.get(
+      `http://localhost:3001/tweets/user/${userId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    throw new Error(error.response.data.message || 'An error occurred');
+  }
+};
+
+const getCreatedCommentForProfile = async (userId) => {
+  const accessToken = localStorage.getItem('accessToken');
+  try {
+    const response = await axios.get(
+      `http://localhost:3001/comments/user/${userId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    throw new Error(error.response.data.message || 'An error occurred');
+  }
+};
+
 export const useProfile = (initialProfileId) => {
   const router = useRouter();
   const { profileId, userId } = useParams();
@@ -313,6 +347,32 @@ export const useProfile = (initialProfileId) => {
     }
   );
 
+  // GET  ALL TWEETS CREATED BY USER
+  const {
+    data: createdTweetForProfile,
+    isLoading: isLoadingCreatedTweetForProfile,
+    refetch: createdTweetForProfileRefetch,
+  } = useQuery(
+    ['createdTweetForProfile', resolvedProfileId],
+    () => getCreatedTweetForProfile(resolvedProfileId),
+    {
+      enabled: !!resolvedProfileId,
+    }
+  );
+
+  // GET  ALL COMMENTS  CREATED BY USER
+  const {
+    data: createdCommentForProfile,
+    isLoading: isLoadingCreatedCommentForProfile,
+    refetch: createdCommentForProfileRefetch,
+  } = useQuery(
+    ['createdCommentForProfile', resolvedProfileId],
+    () => getCreatedCommentForProfile(resolvedProfileId),
+    {
+      enabled: !!resolvedProfileId,
+    }
+  );
+
   return {
     profile,
     profileDetailsRefetch,
@@ -338,5 +398,11 @@ export const useProfile = (initialProfileId) => {
     bookmarkedCommentsForProfile,
     isLoadingBookmarkedCommentsForProfile,
     bookmarkedCommentsForProfileRefetch,
+    createdTweetForProfile,
+    isLoadingCreatedTweetForProfile,
+    createdTweetForProfileRefetch,
+    createdCommentForProfile,
+    isLoadingCreatedCommentForProfile,
+    createdCommentForProfileRefetch,
   };
 };

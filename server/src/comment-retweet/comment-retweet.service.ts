@@ -98,8 +98,6 @@ export class CommentRetweetService {
         relations: [
           'comment',
           'comment.user',
-          'comment.user.follower',
-          'comment.user.profile',
           'comment.comment_favorited',
           'comment.comment_retweeted',
           'comment.comment_bookmarked',

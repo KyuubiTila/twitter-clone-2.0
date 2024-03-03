@@ -41,6 +41,11 @@ export class CommentController {
     return await this.commentService.getCommentById(commentId);
   }
 
+  @Get('user/:userId')
+  async getAllTweetsByUserId(@Param('userId') userId: number) {
+    return await this.commentService.getAllCommentsCreatedByUser(userId);
+  }
+
   @Patch(':commentId')
   async updateComment(
     @GetAuthenticatedUser() user: User,
