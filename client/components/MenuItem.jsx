@@ -12,7 +12,7 @@ const MenuItem = ({ icon: Icon, label, href }) => {
     <div
       onClick={handleClick}
       className={` ${
-        href === 'disabled' ? 'cursor-not-allowed' : ''
+        href === 'disabled' && 'cursor-no-drop'
       } font-bold text-xl mt-1 flex gap-5 text-black w-full items-center px-4  hover:bg-blue-200 hover:text-white  p-3 rounded-full cursor-pointer`}
     >
       <Icon className="w-15 h-8" />
